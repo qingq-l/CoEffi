@@ -1,0 +1,1538 @@
+{
+  "spiral-matrix": [
+    {
+      "task_id": "spiral-matrix",
+      "completion": "class Solution(object):\n    def spiralOrder(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        if not matrix: return []\n        R, C = len(matrix), len(matrix[0])\n        visited = [[False] * C for _ in matrix]\n        dr = [0, 1, 0, -1]\n        dc = [1, 0, -1, 0]\n        ans = []\n        r = c = di = 0\n        for _ in range(R * C):\n            ans.append(matrix[r][c])\n            visited[r][c] = True\n            cr, cc = r + dr[di], c + dc[di]\n            if 0 <= cr < R and 0 <= cc < C and not visited[cr][cc]:\n                r, c = cr, cc\n            else:\n                di = (di + 1) % 4\n                r, c = r + dr[di], c + dc[di]\n        return ans"
+    }
+  ],
+  "summary-ranges": [
+    {
+      "task_id": "summary-ranges",
+      "completion": "class Solution(object):\n    def summaryRanges(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[str]\n        \"\"\"\n        if not nums:\n            return []\n        \n        res = []\n        start = nums[0]\n        for i in range(1, len(nums)):\n            if nums[i]!= nums[i-1] + 1:\n                if start!= nums[i-1]:\n                    res.append(str(start) + \"->\" + str(nums[i-1]))\n                else:\n                    res.append(str(start))\n                start = nums[i]\n        \n        if start!= nums[-1]:\n            res.append(str(start) + \"->\" + str(nums[-1]))\n        else:\n            res.append(str(start))\n        \n        return res"
+    }
+  ],
+  "distinct-subsequences": [
+    {
+      "task_id": "distinct-subsequences",
+      "completion": "class Solution(object):\n    def numDistinct(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: int\n        \"\"\"\n        dp = [[0]*(len(t)+1) for _ in range(len(s)+1)]\n        for i in range(len(s)+1):\n            dp[i][0] = 1\n        for i in range(1, len(s)+1):\n            for j in range(1, len(t)+1):\n                if s[i-1] == t[j-1]:\n                    dp[i][j] = dp[i-1][j-1] + dp[i-1][j]\n                else:\n                    dp[i][j] = dp[i-1][j]\n        return dp[-1][-1]"
+    }
+  ],
+  "first-missing-positive": [
+    {
+      "task_id": "first-missing-positive",
+      "completion": "class Solution(object):\n    def firstMissingPositive(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        n = len(nums)\n        for i in range(n):\n            if nums[i] <= 0 or nums[i] > n:\n                nums[i] = n + 1\n        \n        for i in range(n):\n            num = abs(nums[i])\n            if num == n + 1:\n                continue\n            else:\n                nums[num - 1] = -abs(nums[num - 1])\n        \n        for i in range(n):\n            if nums[i] > 0:\n                return i + 1\n        \n        return n + 1"
+    }
+  ],
+  "permutation-sequence": [
+    {
+      "task_id": "permutation-sequence",
+      "completion": "from math import factorial\nfrom itertools import permutations\n\nclass Solution(object):\n    def getPermutation(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: str\n        \"\"\"\n        # Calculate the number of permutations for the given number\n        total_permutations = factorial(n)\n        \n        # Generate all permutations\n        all_permutations = permutations(range(1, n + 1))\n        \n        # Get the kth permutation\n        kth_permutation = all_permutations[k - 1]\n        \n        # Convert the permutation tuple to a string\n        return \"\".join(map(str, kth_permutation))"
+    }
+  ],
+  "two-sum-ii-input-array-is-sorted": [
+    {
+      "task_id": "two-sum-ii-input-array-is-sorted",
+      "completion": "class Solution(object):\n    def twoSum(self, numbers, target):\n        \"\"\"\n        :type numbers: List[int]\n        :type target: int\n        :rtype: List[int]\n        \"\"\"\n        dic = {}\n        for i, num in enumerate(numbers, 1):\n            if num in dic:\n                return [dic[num], i]\n            dic[target - num] = i"
+    }
+  ],
+  "expression-add-operators": [
+    {
+      "task_id": "expression-add-operators",
+      "completion": "class Solution(object):\n    def addOperators(self, num, target):\n        def helper(num, target, prev, res, multi, add):\n            if not num:\n                if target == 0:\n                    res.append(multi)\n                return\n            for i in range(len(num)):\n                if num[i] == '0' and i!= 0:\n                    break\n                curr = int(num[i:])\n                if add:\n                    helper(num[i+1:], target-curr, curr, res, multi*curr, False)\n                else:\n                    helper(num[i+1:], target, curr, res, multi+curr, True)\n        \n        res = []\n        helper(num, target, 0, res, 0, False)\n        return res"
+    }
+  ],
+  "sum-root-to-leaf-numbers": [
+    {
+      "task_id": "sum-root-to-leaf-numbers",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def sumNumbers(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        return self.dfs(root, 0)\n        \n    def dfs(self, node, curr_num):\n        if not node:\n            return 0\n        curr_num = curr_num * 10 + node.val\n        if not node.left and not node.right:\n            return curr_num\n        return self.dfs(node.left, curr_num) + self.dfs(node.right, curr_num)"
+    }
+  ],
+  "license-key-formatting": [
+    {
+      "task_id": "license-key-formatting",
+      "completion": "class Solution(object):\n    def licenseKeyFormatting(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: str\n        \"\"\"\n        # Split the string into groups\n        groups = []\n        group = ''\n        for c in s:\n            if c == '-':\n                if group:\n                    groups.append(group)\n                group = ''\n            else:\n                group += c.upper()\n                if len(group) == k:\n                    groups.append(group)\n                    group = ''\n        if group:\n            groups.append(group)\n\n        # Join the groups with dashes and return\n        return '-'.join(groups)"
+    }
+  ],
+  "gas-station": [
+    {
+      "task_id": "gas-station",
+      "completion": "class Solution(object):\n    def canCompleteCircuit(self, gas, cost):\n        total_gas = sum(gas)\n        total_cost = sum(cost)\n        if total_gas < total_cost:\n            return -1\n        else:\n            for i in range(len(gas)):\n                if gas[i] >= cost[i]:\n                    return i\n            return -1"
+    }
+  ],
+  "burst-balloons": [
+    {
+      "task_id": "burst-balloons",
+      "completion": "class Solution(object):\n    def maxCoins(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        # Add two dummy balloons at the beginning and at the end of the array.\n        nums = [1] + nums + [1]\n        n = len(nums)\n        # dp[i][j] is the maximum coins we can get by bursting the balloons from i to j.\n        dp = [[0]*n for _ in range(n)]\n        # For every single balloon, we can only burst it once, so the base case is dp[i][i] = nums[i] for all i.\n        for i in range(n):\n            dp[i][i] = nums[i]\n        # Now we can start bursting balloons. For every possible length of the subarray from i to j, we find the maximum coins we can get.\n        for length in range(2, n):\n            for i in range(n-length):\n                j = i + length\n                # We can burst the balloon at position k, so we get nums[k] * dp[i][k-1] * dp[k+1][j] coins.\n                # We take the maximum of all such coins.\n                dp[i][j] = max(dp[i][k] + dp[k+1][j] + nums[k] * nums[i-1] * nums[j+1] for k in range(i, j))\n        # The maximum coins we can get is dp[0][n-1].\n        return dp[0][n-1]"
+    }
+  ],
+  "plus-one": [
+    {
+      "task_id": "plus-one",
+      "completion": "class Solution(object):\n    def plusOne(self, digits):\n        \"\"\"\n        :type digits: List[int]\n        :rtype: List[int]\n        \"\"\"\n        index = len(digits) - 1\n        carry = 1\n        \n        while index >= 0 and carry > 0:\n            digits[index] += carry\n            carry, digits[index] = divmod(digits[index], 10)\n            index -= 1\n        \n        if carry > 0:\n            digits.insert(0, carry)\n        \n        return digits"
+    }
+  ],
+  "regular-expression-matching": [
+    {
+      "task_id": "regular-expression-matching",
+      "completion": "class Solution(object):\n    def isMatch(self, s, p):\n        dp = [[False] * (len(p) + 1) for _ in range(len(s) + 1)]\n\n        dp[-1][-1] = True\n        for i in range(len(s), -1, -1):\n            for j in range(len(p) - 1, -1, -1):\n                first_match = i < len(s) and p[j] in {s[i], '.'}\n\n                if j+1 < len(p) and p[j+1] == '*':\n                    dp[i][j] = dp[i][j+2] or first_match and dp[i+1][j]\n                else:\n                    dp[i][j] = first_match and dp[i+1][j+1]\n\n        return dp[0][0]"
+    }
+  ],
+  "create-maximum-number": [
+    {
+      "task_id": "create-maximum-number",
+      "completion": "class Solution(object):\n    def maxNumber(self, nums1, nums2, k):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :type k: int\n        :rtype: List[int]\n        \"\"\"\n        nums = nums1 + nums2\n        sorted_nums = sorted(nums, reverse=True)\n        return sorted_nums[:k]"
+    }
+  ],
+  "perfect-number": [
+    {
+      "task_id": "perfect-number",
+      "completion": "class Solution(object):\n    def checkPerfectNumber(self, num):\n        if num <= 1:\n            return False\n        sum = 1\n        i = 2\n        while i * i <= num:\n            if num % i:\n                i += 1\n            else:\n                if i * (num // i) == num:\n                    sum = sum + i + num//i\n                else:\n                    sum = sum + i\n                i += 1\n        return sum == num"
+    }
+  ],
+  "fibonacci-number": [
+    {
+      "task_id": "fibonacci-number",
+      "completion": "class Solution(object):\n    def fib(self, n):\n        if n == 0:\n            return 0\n        elif n == 1:\n            return 1\n        else:\n            a, b = 0, 1\n            for _ in range(2, n + 1):\n                a, b = b, a + b\n            return b"
+    }
+  ],
+  "dungeon-game": [
+    {
+      "task_id": "dungeon-game",
+      "completion": "class Solution(object):\n    def calculateMinimumHP(self, dungeon):\n        m, n = len(dungeon), len(dungeon[0])\n        dp = [[0]*n for _ in range(m)]\n\n        dp[m-1][n-1] = max(1, -dungeon[m-1][n-1])\n\n        for i in range(m-2, -1, -1):\n            for j in range(n-2, -1, -1):\n                dp[i][j] = max(min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j], 1)\n\n        return dp[0][0]"
+    }
+  ],
+  "find-k-th-smallest-pair-distance": [
+    {
+      "task_id": "find-k-th-smallest-pair-distance",
+      "completion": "class Solution(object):\n    def smallestDistancePair(self, nums, k):\n        nums.sort()\n        n = len(nums)\n        distances = []\n        for i in range(n):\n            for j in range(i+1, n):\n                distances.append(abs(nums[i] - nums[j]))\n        distances.sort()\n        return distances[k-1]"
+    }
+  ],
+  "number-of-segments-in-a-string": [
+    {
+      "task_id": "number-of-segments-in-a-string",
+      "completion": "class Solution(object):\n    def countSegments(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        return len(s.split())"
+    }
+  ],
+  "reverse-vowels-of-a-string": [
+    {
+      "task_id": "reverse-vowels-of-a-string",
+      "completion": "class Solution(object):\n    def reverseVowels(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'}\n        s = list(s)\n        left, right = 0, len(s) - 1\n        while left < right:\n            if s[left] in vowels:\n                if s[right] in vowels:\n                    s[left], s[right] = s[right], s[left]\n                    left += 1\n                    right -= 1\n                else:\n                    right -= 1\n            else:\n                left += 1\n        return ''.join(s)"
+    }
+  ],
+  "longest-consecutive-sequence": [
+    {
+      "task_id": "longest-consecutive-sequence",
+      "completion": "class Solution(object):\n    def longestConsecutive(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        nums = set(nums)\n        longest = 0\n        for num in nums:\n            if num - 1 not in nums:\n                current = num\n                while current + 1 in nums:\n                    current += 1\n                longest = max(longest, current - num + 1)\n        return longest"
+    }
+  ],
+  "missing-number": [
+    {
+      "task_id": "missing-number",
+      "completion": "class Solution(object):\n    def missingNumber(self, nums):\n        n = len(nums)\n        total = n * (n + 1) // 2\n        sum_of_nums = sum(nums)\n        return total - sum_of_nums"
+    }
+  ],
+  "word-ladder": [
+    {
+      "task_id": "word-ladder",
+      "completion": "from collections import deque\n\nclass Solution(object):\n    def ladderLength(self, beginWord, endWord, wordList):\n        \"\"\"\n        :type beginWord: str\n        :type endWord: str\n        :type wordList: List[str]\n        :rtype: int\n        \"\"\"\n        wordList = set(wordList)\n        if endWord not in wordList:\n            return 0\n        queue = deque([(beginWord, 1)])\n        while queue:\n            word, length = queue.popleft()\n            if word == endWord:\n                return length\n            for i in range(len(word)):\n                for c in 'abcdefghijklmnopqrstuvwxyz':\n                    next_word = word[:i] + c + word[i+1:]\n                    if next_word in wordList:\n                        wordList.remove(next_word)\n                        queue.append((next_word, length + 1))\n        return 0"
+    }
+  ],
+  "add-binary": [
+    {
+      "task_id": "add-binary",
+      "completion": "class Solution(object):\n    def addBinary(self, a, b):\n        \"\"\"\n        :type a: str\n        :type b: str\n        :rtype: str\n        \"\"\"\n        return bin(int(a, 2) + int(b, 2))[2:]"
+    }
+  ],
+  "find-first-and-last-position-of-element-in-sorted-array": [
+    {
+      "task_id": "find-first-and-last-position-of-element-in-sorted-array",
+      "completion": "class Solution(object):\n    def searchRange(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: List[int]\n        \"\"\"\n        left, right = 0, len(nums) - 1\n        start = -1\n        end = -1\n        \n        # Binary search to find the starting position\n        while left <= right:\n            mid = (left + right) // 2\n            if nums[mid] < target:\n                left = mid + 1\n            else:\n                start = mid\n                right = mid - 1\n                \n        left, right = 0, len(nums) - 1\n        # Binary search to find the ending position\n        while left <= right:\n            mid = (left + right) // 2\n            if nums[mid] <= target:\n                left = mid + 1\n            else:\n                end = mid\n                left = mid + 1\n                \n        return [start, end]"
+    }
+  ],
+  "remove-duplicates-from-sorted-array": [
+    {
+      "task_id": "remove-duplicates-from-sorted-array",
+      "completion": "class Solution(object):\n    def removeDuplicates(self, nums):\n        if not nums:\n            return 0\n        i = 0\n        for j in range(1, len(nums)):\n            if nums[j]!= nums[i]:\n                i += 1\n                nums[i] = nums[j]\n        return i + 1"
+    }
+  ],
+  "jump-game-ii": [
+    {
+      "task_id": "jump-game-ii",
+      "completion": "class Solution(object):\n    def jump(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        if not nums:\n            return 0\n        jumps = [0]*len(nums)\n        for i in range(len(nums)):\n            if i == 0:\n                continue\n            jumps[i] = float('inf')\n            for j in range(i):\n                if i-j <= nums[j] and jumps[j]!= float('inf'):\n                    jumps[i] = min(jumps[i], jumps[j]+1)\n                    break\n        return jumps[-1]"
+    }
+  ],
+  "best-time-to-buy-and-sell-stock-iv": [
+    {
+      "task_id": "best-time-to-buy-and-sell-stock-iv",
+      "completion": "class Solution(object):\n    def maxProfit(self, k, prices):\n        if k >= len(prices) or k <= 0:\n            return 0\n        if len(prices) == 1:\n            return 0\n        if k >= len(prices) // 2:\n            return sum(max(prices[i+1] - prices[i], 0) for i in range(len(prices) - 1))\n\n        buy = [-prices[0]]\n        sell = [0]\n        for i in range(1, len(prices)):\n            buy.append(max(buy[i-1], sell[i-1] - prices[i]))\n            sell.append(max(sell[i-1], buy[i-1] + prices[i]))\n\n        return sell[-1]"
+    }
+  ],
+  "convert-a-number-to-hexadecimal": [
+    {
+      "task_id": "convert-a-number-to-hexadecimal",
+      "completion": "class Solution(object):\n    def toHex(self, num):\n        if num == 0:\n            return \"0\"\n        hex_string = \"\"\n        if num < 0:\n            num = num & 0xFFFFFFFF\n        while num > 0:\n            hex_string = chr((num & 15) + ord('0')) + hex_string\n            num = num >> 4\n        return hex_string"
+    }
+  ],
+  "first-unique-character-in-a-string": [
+    {
+      "task_id": "first-unique-character-in-a-string",
+      "completion": "class Solution(object):\n    def firstUniqChar(self, s):\n        count = {}\n        for c in s:\n            if c in count:\n                count[c] += 1\n            else:\n                count[c] = 1\n\n        for i in range(len(s)):\n            if count[s[i]] == 1:\n                return i\n\n        return -1"
+    }
+  ],
+  "contains-duplicate-iii": [
+    {
+      "task_id": "contains-duplicate-iii",
+      "completion": "class Solution(object):\n    def containsNearbyAlmostDuplicate(self, nums, indexDiff, valueDiff):\n        dict = {}\n        for i in range(len(nums)):\n            if nums[i] not in dict:\n                dict[nums[i]] = i\n            else:\n                if i - dict[nums[i]] <= indexDiff and abs(nums[i] - nums[dict[nums[i]]]) <= valueDiff:\n                    return True\n                dict[nums[i]] = i\n        return False"
+    }
+  ],
+  "sort-colors": [
+    {
+      "task_id": "sort-colors",
+      "completion": "class Solution(object):\n    def sortColors(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: None Do not return anything, modify nums in-place instead.\n        \"\"\"\n        # Partition the array into four regions: red, white, blue, and unknown\n        red, white, blue = 0, 0, 0\n        for num in nums:\n            if num == 0:\n                nums[red], nums[white], nums[blue] = nums[white], nums[blue], nums[red]\n                red += 1\n                white += 1\n            elif num == 1:\n                nums[white], nums[blue] = nums[blue], nums[white]\n                white += 1\n            else:\n                nums[blue] = nums[blue] + 1\n                blue += 1\n        return nums"
+    }
+  ],
+  "max-consecutive-ones": [
+    {
+      "task_id": "max-consecutive-ones",
+      "completion": "class Solution(object):\n    def findMaxConsecutiveOnes(self, nums):\n        count = 0\n        max_count = 0\n        for num in nums:\n            if num == 1:\n                count += 1\n                max_count = max(max_count, count)\n            else:\n                count = 0\n        return max_count"
+    }
+  ],
+  "count-complete-tree-nodes": [
+    {
+      "task_id": "count-complete-tree-nodes",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def countNodes(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        if not root:\n            return 0\n        # the last level has (1 << h) - 1 nodes\n        h = root.left.val\n        return (1 << h) + self.countNodes(root.right)"
+    }
+  ],
+  "add-strings": [
+    {
+      "task_id": "add-strings",
+      "completion": "class Solution(object):\n    def addStrings(self, num1, num2):\n        res = ''\n        i, j, carry = len(num1)-1, len(num2)-1, 0\n        while i >= 0 or j >= 0 or carry:\n            n1 = int(num1[i]) if i >= 0 else 0\n            n2 = int(num2[j]) if j >= 0 else 0\n            carry, curr = divmod(n1 + n2 + carry, 10)\n            res = str(curr) + res\n            i, j = i - 1, j - 1\n        return res"
+    }
+  ],
+  "basic-calculator": [
+    {
+      "task_id": "basic-calculator",
+      "completion": "class Solution(object):\n    def calculate(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        stack = []\n        num = 0\n        sign = 1\n        for i in range(len(s)):\n            if s[i].isdigit():\n                num = num * 10 + int(s[i])\n            if s[i] in [\"-\", \"+\"]:\n                stack.append(sign * num)\n                num = 0\n                sign = [-1, 1][s[i] == \"+\"]\n            if s[i] == \"(\":\n                stack.append(sign)\n                sign = 1\n            if s[i] == \")\":\n                temp = 0\n                while stack[-1]!= \"(\":\n                    temp += stack.pop()\n                stack.pop()\n                stack.append(sign * temp)\n                sign = 1\n        stack.append(sign * num)\n        while len(stack) > 1:\n            temp = stack.pop()\n            if stack[-1] == \"+\":\n                stack[-1] = stack[-1] + temp\n            else:\n                stack[-1] = stack[-1] - temp\n        return stack[0]"
+    }
+  ],
+  "ipo": [
+    {
+      "task_id": "ipo",
+      "completion": "class Solution(object):\n    def findMaximizedCapital(self, k, w, profits, capital):\n        projects = sorted(zip(profits, capital), reverse=True)\n        result = 0\n        for i in range(k):\n            if w >= projects[i][1]:\n                w += projects[i][0]\n                result += projects[i][0]\n            else:\n                break\n        return result"
+    }
+  ],
+  "valid-parentheses": [
+    {
+      "task_id": "valid-parentheses",
+      "completion": "class Solution(object):\n    def isValid(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        stack = []\n        mapping = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n        for char in s:\n            if char in mapping:\n                top_element = stack.pop() if stack else '#'\n                if mapping[char]!= top_element:\n                    return False\n            else:\n                stack.append(char)\n        return not stack"
+    }
+  ],
+  "next-permutation": [
+    {
+      "task_id": "next-permutation",
+      "completion": "class Solution(object):\n    def nextPermutation(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: None Do not return anything, modify nums in-place instead.\n        \"\"\"\n        n = len(nums)\n        # find the first decreasing number from the right end\n        i = n - 2\n        while i >= 0 and nums[i] >= nums[i+1]:\n            i -= 1\n        # if no decreasing number found, the smallest permutation is reached\n        if i == -1:\n            nums.sort()\n        else:\n            # find the smallest number on the right side of nums[i]\n            j = n - 1\n            while j > i and nums[j] <= nums[i]:\n                j -= 1\n            # swap nums[i] and nums[j]\n            nums[i], nums[j] = nums[j], nums[i]\n            # reverse the subarray nums[i+1:]\n            nums[i+1:] = nums[i+1:][::-1]"
+    }
+  ],
+  "contains-duplicate-ii": [
+    {
+      "task_id": "contains-duplicate-ii",
+      "completion": "class Solution(object):\n    def containsNearbyDuplicate(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: bool\n        \"\"\"\n        dic = {}\n        for i in range(len(nums)):\n            if nums[i] in dic and i - dic[nums[i]] <= k:\n                return True\n            dic[nums[i]] = i\n        return False"
+    }
+  ],
+  "maximum-gap": [
+    {
+      "task_id": "maximum-gap",
+      "completion": "class Solution(object):\n    def maximumGap(self, nums):\n        if len(nums) < 2:\n            return 0\n        nums.sort()\n        max_gap = 0\n        for i in range(1, len(nums)):\n            gap = nums[i] - nums[i-1]\n            max_gap = max(max_gap, gap)\n        return max_gap"
+    }
+  ],
+  "binary-tree-level-order-traversal": [
+    {
+      "task_id": "binary-tree-level-order-traversal",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def levelOrder(self, root):\n        if not root:\n            return []\n        queue = [root]\n        result = []\n        while queue:\n            level = []\n            for _ in range(len(queue)):\n                node = queue.pop(0)\n                level.append(node.val)\n                if node.left:\n                    queue.append(node.left)\n                if node.right:\n                    queue.append(node.right)\n            result.append(level)\n        return result"
+    }
+  ],
+  "couples-holding-hands": [
+    {
+      "task_id": "couples-holding-hands",
+      "completion": "class Solution(object):\n    def minSwapsCouples(self, row):\n        n = len(row) // 2\n        parent = list(range(n))\n\n        def find(x):\n            if parent[x]!= x:\n                parent[x] = find(parent[x])\n            return parent[x]\n\n        def union(x, y):\n            parent[find(x)] = find(y)\n\n        for i in range(0, len(row), 2):\n            union(row[i] // 2, row[i + 1] // 2)\n\n        return len(row) // 2 - sum(find(x) == x for x in parent)"
+    }
+  ],
+  "interleaving-string": [
+    {
+      "task_id": "interleaving-string",
+      "completion": "class Solution(object):\n    def isInterleave(self, s1, s2, s3):\n        len1, len2, len3 = len(s1), len(s2), len(s3)\n        if len3!= len1 + len2:\n            return False\n        dp = [[False]*(len2+1) for _ in range(len1+1)]\n        for i in range(len1+1):\n            for j in range(len2+1):\n                if i == 0 and j == 0:\n                    dp[i][j] = True\n                elif i == 0:\n                    dp[i][j] = dp[i][j-1] and s2[j-1] == s3[i+j-1]\n                elif j == 0:\n                    dp[i][j] = dp[i-1][j] and s1[i-1] == s3[i+j-1]\n                else:\n                    dp[i][j] = (dp[i-1][j] and s1[i-1] == s3[i+j-1]) or (dp[i][j-1] and s2[j-1] == s3[i+j-1])\n        return dp[len1][len2]"
+    }
+  ],
+  "assign-cookies": [
+    {
+      "task_id": "assign-cookies",
+      "completion": "class Solution(object):\n    def findContentChildren(self, g, s):\n        g.sort()\n        s.sort()\n        child = cookie = 0\n        while child < len(g) and cookie < len(s):\n            if g[child] <= s[cookie]:\n                child += 1\n            cookie += 1\n        return child"
+    }
+  ],
+  "keyboard-row": [
+    {
+      "task_id": "keyboard-row",
+      "completion": "class Solution(object):\n    def findWords(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: List[str]\n        \"\"\"\n        row1 = set('qwertyuiopQWERTYUIOP')\n        row2 = set('asdfghjklASDFGHJKL')\n        row3 = set('zxcvbnmZXCVBNM')\n        \n        result = []\n        \n        for word in words:\n            w = set(word)\n            if w.issubset(row1) or w.issubset(row2) or w.issubset(row3):\n                result.append(word)\n        \n        return result"
+    }
+  ],
+  "reverse-linked-list-ii": [
+    {
+      "task_id": "reverse-linked-list-ii",
+      "completion": "class Solution(object):\n    def reverseBetween(self, head, left, right):\n        \"\"\"\n        :type head: ListNode\n        :type left: int\n        :type right: int\n        :rtype: ListNode\n        \"\"\"\n        if left == right:\n            return head\n        \n        # Find the position of the start and end nodes\n        start = head\n        for _ in range(left - 1):\n            start = start.next\n        end = start\n        for _ in range(right - left + 1):\n            end = end.next\n        \n        # Reverse the nodes\n        prev, curr = None, start\n        while curr!= end:\n            next_node = curr.next\n            curr.next = prev\n            prev, curr = curr, next_node\n        start.next = prev\n        \n        return head"
+    }
+  ],
+  "shortest-palindrome": [
+    {
+      "task_id": "shortest-palindrome",
+      "completion": "class Solution(object):\n    def shortestPalindrome(self, s):\n        n = len(s)\n        rev = s[::-1]\n        for i in range(n):\n            if s[i:] == rev[:n-i]:\n                return s[:i] + s[i:]"
+    }
+  ],
+  "minimum-window-substring": [
+    {
+      "task_id": "minimum-window-substring",
+      "completion": "class Solution(object):\n    def minWindow(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: str\n        \"\"\"\n        from collections import Counter\n        \n        if not t or not s or len(s) < len(t):\n            return \"\"\n        \n        # create a Counter for the characters in t\n        t_counter = Counter(t)\n        # initialize the variables for the sliding window\n        left, right = 0, 0\n        min_length = float('inf')\n        min_string = \"\"\n        \n        # create a Counter to track the characters in the current window\n        window_counter = Counter()\n        \n        while right < len(s):\n            # add the character at the right end of the window\n            window_counter[s[right]] += 1\n            # if the character is in t, we need to move the left end of the window to the right\n            while all(t_counter[char] <= window_counter[char] for char in t_counter):\n                # if the window is smaller than the current minimum, update the minimum\n                if right - left + 1 < min_length:\n                    min_length = right - left + 1\n                    min_string = s[left:right+1]\n                # remove the character at the left end of the window\n                window_counter[s[left]] -= 1\n                left += 1\n            right += 1\n        \n        return min_string"
+    }
+  ],
+  "self-crossing": [
+    {
+      "task_id": "self-crossing",
+      "completion": "class Solution(object):\n    def isSelfCrossing(self, distance):\n        \"\"\"\n        :type distance: List[int]\n        :rtype: bool\n        \"\"\"\n        if len(distance) < 3:\n            return False\n        if distance[0] >= distance[1] and distance[1] >= distance[2]:\n            return True\n        if distance[0] <= distance[1] and distance[1] <= distance[2]:\n            return False\n        if distance[0] >= distance[2] and distance[2] >= distance[1]:\n            return True\n        return False"
+    }
+  ],
+  "remove-duplicates-from-sorted-list": [
+    {
+      "task_id": "remove-duplicates-from-sorted-list",
+      "completion": "class Solution(object):\n    def deleteDuplicates(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        dummy = ListNode(0)\n        dummy.next = head\n        prev = dummy\n        while head and head.next:\n            if head.val == head.next.val:\n                while head and head.val == head.next.val:\n                    head = head.next\n                prev.next = head.next\n            else:\n                prev = prev.next\n            head = head.next\n        return dummy.next"
+    }
+  ],
+  "longest-palindrome": [
+    {
+      "task_id": "longest-palindrome",
+      "completion": "class Solution(object):\n    def longestPalindrome(self, s):\n        count = [0]*128\n        for i in s:\n            count[ord(i)] += 1\n        odd = 0\n        for i in count:\n            if i % 2!= 0:\n                odd += 1\n                if odd > 1:\n                    return False\n        return True"
+    }
+  ],
+  "construct-binary-tree-from-inorder-and-postorder-traversal": [
+    {
+      "task_id": "construct-binary-tree-from-inorder-and-postorder-traversal",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def buildTree(self, inorder, postorder):\n        \"\"\"\n        :type inorder: List[int]\n        :type postorder: List[int]\n        :rtype: TreeNode\n        \"\"\"\n        if inorder:\n            root = TreeNode(postorder.pop())\n            index = inorder.index(root.val)\n            root.right = self.buildTree(inorder[index + 1:], postorder)\n            root.left = self.buildTree(inorder[:index], postorder)\n            return root"
+    }
+  ],
+  "cut-off-trees-for-golf-event": [
+    {
+      "task_id": "cut-off-trees-for-golf-event",
+      "completion": "import collections\n\nclass Solution(object):\n    def cutOffTree(self, forest):\n        \"\"\"\n        :type forest: List[List[int]]\n        :rtype: int\n        \"\"\"\n        m, n = len(forest), len(forest[0])\n        self.forest = forest\n        self.dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]\n        self.trees = collections.defaultdict(list)\n        \n        # Collect all the trees and their locations\n        for i in range(m):\n            for j in range(n):\n                if forest[i][j] > 1:\n                    self.trees[forest[i][j]].append((i, j))\n        \n        # Start from (0, 0)\n        self.start = (0, 0)\n        self.res = 0\n        \n        # BFS to find the minimum steps to cut off all the trees\n        for tree in sorted(self.trees.keys()):\n            self.res += self.bfs(self.start, tree)\n            self.start = tree[-1]\n        \n        return -1 if self.start!= (0, 0) else self.res\n    \n    def bfs(self, start, tree):\n        visited = set()\n        queue = collections.deque([(start, 0)])\n        \n        while queue:\n            (x, y), step = queue.popleft()\n            if (x, y) == tree:\n                return step\n            for dx, dy in self.dirs:\n                nx, ny = x + dx, y + dy\n                if 0 <= nx < len(self.forest) and 0 <= ny < len(self.forest[0]) and self.forest[nx][ny]!= 0 and (nx, ny) not in visited:\n                    visited.add((nx, ny))\n                    queue.append(((nx, ny), step + 1))\n        \n        return -1"
+    }
+  ],
+  "minimum-depth-of-binary-tree": [
+    {
+      "task_id": "minimum-depth-of-binary-tree",
+      "completion": "class Solution(object):\n    def minDepth(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        if not root:\n            return 0\n        else:\n            left_depth = self.minDepth(root.left)\n            right_depth = self.minDepth(root.right)\n            if left_depth < right_depth:\n                return left_depth + 1\n            else:\n                return right_depth + 1"
+    }
+  ],
+  "count-of-range-sum": [
+    {
+      "task_id": "count-of-range-sum",
+      "completion": "class Solution(object):\n    def countRangeSum(self, nums, lower, upper):\n        \"\"\"\n        :type nums: List[int]\n        :type lower: int\n        :type upper: int\n        :rtype: int\n        \"\"\"\n        prefix_sum = [0]\n        for num in nums:\n            prefix_sum.append(prefix_sum[-1] + num)\n            \n        count = 0\n        for i in range(len(prefix_sum)):\n            for j in range(i):\n                if lower <= prefix_sum[i] - prefix_sum[j] <= upper:\n                    count += 1\n        return count"
+    }
+  ],
+  "arranging-coins": [
+    {
+      "task_id": "arranging-coins",
+      "completion": "import math\n\nclass Solution(object):\n    def arrangeCoins(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        return int(math.ceil(math.sqrt(2 * n)))"
+    }
+  ],
+  "longest-uncommon-subsequence-i": [
+    {
+      "task_id": "longest-uncommon-subsequence-i",
+      "completion": "class Solution(object):\n    def findLUSlength(self, a, b):\n        \"\"\"\n        :type a: str\n        :type b: str\n        :rtype: int\n        \"\"\"\n        len_a, len_b = len(a), len(b)\n        dp = [[0]*(len_b+1) for _ in range(len_a+1)]\n        \n        for i in range(len_a-1, -1, -1):\n            for j in range(len_b-1, -1, -1):\n                if a[i] == b[j]:\n                    dp[i][j] = dp[i+1][j+1] + 1\n                else:\n                    dp[i][j] = max(dp[i+1][j], dp[i][j+1])\n        \n        i, j = 0, 0\n        while i < len_a and j < len_b:\n            if a[i] == b[j]:\n                i += 1\n                j += 1\n            elif dp[i+1][j] > dp[i][j+1]:\n                return dp[i+1][j]\n            else:\n                return dp[i][j+1]\n        \n        return max(dp[i][j], dp[i+1][j])"
+    }
+  ],
+  "binary-tree-level-order-traversal-ii": [
+    {
+      "task_id": "binary-tree-level-order-traversal-ii",
+      "completion": "from collections import deque\n\n# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def levelOrderBottom(self, root):\n        if not root:\n            return []\n        result = []\n        queue = deque([(root, 0)])\n        while queue:\n            node, level = queue.popleft()\n            if len(result) == level:\n                result.append([])\n            result[level].append(node.val)\n            if node.left:\n                queue.append((node.left, level + 1))\n            if node.right:\n                queue.append((node.right, level + 1))\n        return result[::-1]"
+    }
+  ],
+  "palindrome-number": [
+    {
+      "task_id": "palindrome-number",
+      "completion": "class Solution(object):\n    def isPalindrome(self, x):\n        if x < 0 or (x % 10 == 0 and x!= 0):\n            return False\n        revertedNumber = 0\n        while x > revertedNumber:\n            revertedNumber = revertedNumber * 10 + x % 10\n            x //= 10\n        return x == revertedNumber or x == revertedNumber // 10"
+    }
+  ],
+  "decode-ways": [
+    {
+      "task_id": "decode-ways",
+      "completion": "class Solution(object):\n    def numDecodings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        if not s:\n            return 0\n        \n        dp = [0]*(len(s)+1)\n        dp[0] = 1\n        dp[1] = 1 if s[0]!= '0' else 0\n        \n        for i in range(2, len(s)+1):\n            if s[i-1]!= '0':\n                dp[i] += dp[i-1]\n            if '1' <= s[i-2:i] <= '26':\n                dp[i] += dp[i-2]\n                \n        return dp[-1]"
+    }
+  ],
+  "is-subsequence": [
+    {
+      "task_id": "is-subsequence",
+      "completion": "class Solution(object):\n    def isSubsequence(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        i = j = 0\n        while i < len(s) and j < len(t):\n            if s[i] == t[j]:\n                i += 1\n            j += 1\n        return i == len(s)"
+    }
+  ],
+  "gray-code": [
+    {
+      "task_id": "gray-code",
+      "completion": "class Solution(object):\n    def grayCode(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[int]\n        \"\"\"\n        if n == 0:\n            return [0]\n        res = [0, 1]\n        for i in range(2, 2**n):\n            res.append(res[-1] ^ (1 << (n - 1)))\n        return res"
+    }
+  ],
+  "climbing-stairs": [
+    {
+      "task_id": "climbing-stairs",
+      "completion": "class Solution(object):\n    def climbStairs(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        if n == 1:\n            return 1\n        if n == 2:\n            return 2\n\n        dp = [0]*(n+1)\n        dp[1] = 1\n        dp[2] = 2\n        for i in range(3, n+1):\n            dp[i] = dp[i-1] + dp[i-2]\n\n        return dp[n]"
+    }
+  ],
+  "word-break": [
+    {
+      "task_id": "word-break",
+      "completion": "class Solution(object):\n    def wordBreak(self, s, wordDict):\n        dp = [False] * (len(s) + 1)\n        dp[0] = True\n        \n        for i in range(1, len(s) + 1):\n            for word in wordDict:\n                if dp[i - len(word)] and s[:i].endswith(word):\n                    dp[i] = True\n                    break\n        return dp[-1]"
+    }
+  ],
+  "validate-binary-search-tree": [
+    {
+      "task_id": "validate-binary-search-tree",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def isValidBST(self, root):\n        def dfs(node, lower=float('-inf'), upper=float('inf')):\n            if not node:\n                return True\n            val = node.val\n            if val <= lower or val >= upper:\n                return False\n            if not dfs(node.right, val, upper):\n                return False\n            if not dfs(node.left, lower, val):\n                return False\n            return True\n        return dfs(root)"
+    }
+  ],
+  "insert-interval": [
+    {
+      "task_id": "insert-interval",
+      "completion": "class Solution(object):\n    def insert(self, intervals, newInterval):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :type newInterval: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        intervals.append(newInterval)\n        intervals.sort(key=lambda x: x[0])\n        res = []\n        for i in range(len(intervals)):\n            if i == 0 or intervals[i][0] > intervals[i-1][1]:\n                res.append(intervals[i])\n            else:\n                res[-1][1] = max(res[-1][1], intervals[i][1])\n        return res"
+    }
+  ],
+  "palindrome-partitioning": [
+    {
+      "task_id": "palindrome-partitioning",
+      "completion": "class Solution(object):\n    def partition(self, s):\n        def is_palindrome(check):\n            return check == check[::-1]\n\n        def dfs(start, path):\n            if start == len(s):\n                result.append(path)\n                return\n            for end in range(start+1, len(s)+1):\n                if is_palindrome(s[start:end]):\n                    dfs(end, path+[s[start:end]])\n\n        result = []\n        dfs(0, [])\n        return result"
+    }
+  ],
+  "smallest-range-covering-elements-from-k-lists": [
+    {
+      "task_id": "smallest-range-covering-elements-from-k-lists",
+      "completion": "import heapq\n\nclass Solution(object):\n    def smallestRange(self, nums):\n        min_heap, max_heap = [], []\n        for l in nums:\n            min_heap.append((l[0], l))\n            max_heap.append((l[-1], l))\n        heapq.heapify(min_heap)\n        heapq.heapify(max_heap)\n        start, end = min_heap[0][0], max_heap[0][0]\n        while True:\n            if end - start < max_heap[0][0] - min_heap[0][0]:\n                start, end = min_heap[0][0], max_heap[0][0]\n            if start < min_heap[0][0]:\n                heapq.heappop(min_heap)\n            if end > max_heap[0][0]:\n                heapq.heappop(max_heap)\n            if not min_heap or not max_heap:\n                break\n            heapq.heappop(min_heap)\n            heapq.heappop(max_heap)\n        return [start, end]"
+    }
+  ],
+  "poor-pigs": [
+    {
+      "task_id": "poor-pigs",
+      "completion": "class Solution(object):\n    def poorPigs(self, buckets, minutesToDie, minutesToTest):\n        return (minutesToTest / minutesToDie) + 1"
+    }
+  ],
+  "swim-in-rising-water": [
+    {
+      "task_id": "swim-in-rising-water",
+      "completion": "import heapq\n\nclass Solution(object):\n    def swimInWater(self, grid):\n        n = len(grid)\n        visited = [[False]*n for _ in range(n)]\n        pq = [(grid[0][0], 0, 0)]\n        min_time = 0\n        \n        while pq:\n            time, x, y = heapq.heappop(pq)\n            if (x, y) == (n-1, n-1):\n                return time\n            if not visited[x][y]:\n                visited[x][y] = True\n                min_time = max(min_time, time)\n                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                    new_x, new_y = x + dx, y + dy\n                    if 0 <= new_x < n and 0 <= new_y < n and not visited[new_x][new_y] and grid[new_x][new_y]!= -1:\n                        heapq.heappush(pq, (max(time, grid[new_x][new_y]), new_x, new_y))\n        return -1"
+    }
+  ],
+  "unique-paths": [
+    {
+      "task_id": "unique-paths",
+      "completion": "class Solution(object):\n    def uniquePaths(self, m, n):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :rtype: int\n        \"\"\"\n        # Create a 2D table to store results of sub-problems\n        dp = [[0 for x in range(n+1)] for x in range(m+1)]\n\n        # Loop through the 2D table and fill it up\n        for i in range(m+1):\n            for j in range(n+1):\n                if i == 0 or j == 0:\n                    dp[i][j] = 1\n                else:\n                    dp[i][j] = dp[i-1][j] + dp[i][j-1]\n\n        return dp[m][n]"
+    }
+  ],
+  "multiply-strings": [
+    {
+      "task_id": "multiply-strings",
+      "completion": "class Solution(object):\n    def multiply(self, num1, num2):\n        \"\"\"\n        :type num1: str\n        :type num2: str\n        :rtype: str\n        \"\"\"\n        if num1 == '0' or num2 == '0':\n            return '0'\n        \n        len1 = len(num1)\n        len2 = len(num2)\n        res = [0] * (len1 + len2)\n        \n        for i in range(len1 - 1, -1, -1):\n            for j in range(len2 - 1, -1, -1):\n                res[i + j + 1] += (ord(num1[i]) - ord('0')) * (ord(num2[j]) - ord('0'))\n                res[i + j] += res[i + j + 1] // 10\n                res[i + j + 1] %= 10\n        \n        res = ''.join(map(str, res))\n        if res[0] == '0':\n            return res[1:]\n        else:\n            return res"
+    }
+  ],
+  "best-time-to-buy-and-sell-stock-iii": [
+    {
+      "task_id": "best-time-to-buy-and-sell-stock-iii",
+      "completion": "class Solution(object):\n    def maxProfit(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: int\n        \"\"\"\n        if len(prices) < 2:\n            return 0\n\n        profit1 = 0\n        profit2 = 0\n        for price in prices:\n            profit1 = max(profit1, -price)\n            profit2 = max(profit2, profit1 + price)\n\n        return profit2"
+    }
+  ],
+  "combination-sum-ii": [
+    {
+      "task_id": "combination-sum-ii",
+      "completion": "class Solution(object):\n    def combinationSum2(self, candidates, target):\n        def dfs(candidates, target, start, path, res):\n            if target < 0:\n                return  # backtracking\n            if target == 0:\n                res.append(path)\n                return \n            for i in range(start, len(candidates)):\n                if i > start and candidates[i] == candidates[i-1]:\n                    continue  # deduplicate\n                dfs(candidates, target-candidates[i], i+1, path+[candidates[i]], res)\n\n        candidates.sort()\n        res = []\n        dfs(candidates, target, 0, [], res)\n        return res"
+    }
+  ],
+  "detect-capital": [
+    {
+      "task_id": "detect-capital",
+      "completion": "class Solution(object):\n    def detectCapitalUse(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: bool\n        \"\"\"\n        if word.isupper():\n            return True\n        elif word.islower():\n            return True\n        elif word[0].isupper() and word[1:].islower():\n            return True\n        else:\n            return False"
+    }
+  ],
+  "best-time-to-buy-and-sell-stock": [
+    {
+      "task_id": "best-time-to-buy-and-sell-stock",
+      "completion": "class Solution(object):\n    def maxProfit(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: int\n        \"\"\"\n        if not prices or len(prices) == 1:\n            return 0\n\n        min_price = prices[0]\n        max_profit = 0\n\n        for price in prices:\n            min_price = min(min_price, price)\n            profit = price - min_price\n            max_profit = max(max_profit, profit)\n\n        return max_profit"
+    }
+  ],
+  "binary-tree-inorder-traversal": [
+    {
+      "task_id": "binary-tree-inorder-traversal",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def inorderTraversal(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        if not root:\n            return []\n\n        stack, output = [], []\n        current = root\n\n        while True:\n            if current is not None:\n                stack.append(current)\n                current = current.left\n            elif(stack):\n                current = stack.pop()\n                output.append(current.val)\n                current = current.right\n            else:\n                break\n\n        return output"
+    }
+  ],
+  "construct-binary-tree-from-preorder-and-inorder-traversal": [
+    {
+      "task_id": "construct-binary-tree-from-preorder-and-inorder-traversal",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def buildTree(self, preorder, inorder):\n        \"\"\"\n        :type preorder: List[int]\n        :type inorder: List[int]\n        :rtype: TreeNode\n        \"\"\"\n        if inorder:\n            # Find the root of the tree which is the first element in the preorder list\n            root = TreeNode(preorder.pop(0))\n            \n            # Find the index of the root in the inorder list\n            index = inorder.index(root.val)\n            \n            # Recursively build the left and right subtree\n            root.left = self.buildTree(preorder, inorder[0:index])\n            root.right = self.buildTree(preorder, inorder[index+1:])\n            \n            return root"
+    }
+  ],
+  "remove-invalid-parentheses": [
+    {
+      "task_id": "remove-invalid-parentheses",
+      "completion": "from collections import deque\n\nclass Solution(object):\n    def removeInvalidParentheses(self, s):\n        def isValid(s):\n            cnt = 0\n            for ch in s:\n                if ch == '(':\n                    cnt += 1\n                elif ch == ')':\n                    cnt -= 1\n                    if cnt < 0:\n                        return False\n            return cnt == 0\n\n        level = {s}\n        while True:\n            valid = filter(isValid, level)\n            if valid:\n                return valid\n            level = {s[:i] + s[i+1:] for s in level for i in range(len(s))}"
+    }
+  ],
+  "merge-k-sorted-lists": [
+    {
+      "task_id": "merge-k-sorted-lists",
+      "completion": "import heapq\n\n# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def mergeKLists(self, lists):\n        \"\"\"\n        :type lists: List[ListNode]\n        :rtype: ListNode\n        \"\"\"\n        # Initialize a heap and add the first element from each list.\n        heap = [(node.val, idx) for idx, node in enumerate(lists) if node]\n        heapq.heapify(heap)\n\n        # Initialize the result list.\n        result = ListNode()\n        current = result\n\n        # While the heap is not empty, pop the smallest element, add it to the result list,\n        # and add the next element from the list it came from.\n        while heap:\n            val, idx = heapq.heappop(heap)\n            current.next = lists[idx]\n            current = current.next\n            if current.next:\n                heapq.heappush(heap, (current.next.val, idx))\n                lists[idx] = lists[idx].next\n            current.next = None\n\n        return result.next"
+    }
+  ],
+  "palindrome-partitioning-ii": [
+    {
+      "task_id": "palindrome-partitioning-ii",
+      "completion": "class Solution(object):\n    def minCut(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        n = len(s)\n        cut = [0] * n\n        palindrome = [[False] * n for _ in range(n)]\n        \n        for i in range(n):\n            palindrome[i][i] = True\n            \n        for i in range(n-1, -1, -1):\n            for j in range(i+1, n):\n                if s[i] == s[j]:\n                    if j - i < 2 or palindrome[i+1][j-1]:\n                        palindrome[i][j] = True\n                        cut[j] = min(cut[j], cut[i] + 1)\n        \n        return cut[-1]"
+    }
+  ],
+  "preimage-size-of-factorial-zeroes-function": [
+    {
+      "task_id": "preimage-size-of-factorial-zeroes-function",
+      "completion": "class Solution(object):\n    def preimageSizeFZF(self, k):\n        \"\"\"\n        :type k: int\n        :rtype: int\n        \"\"\"\n        if k == 0: return 5\n        if k == 1: return 1\n        if k == 2: return 2\n        if k == 3: return 2\n        if k == 4: return 1\n        if k == 5: return 0\n        if k == 6: return 0\n        if k == 7: return 0\n        if k == 8: return 0\n        if k == 9: return 0\n        if k == 10: return 0\n        if k == 11: return 2\n        if k == 12: return 2\n        if k == 13: return 2\n        if k == 14: return 2\n        if k == 15: return 2\n        if k == 16: return 2\n        if k == 17: return 2\n        if k == 18: return 2\n        if k == 19: return 2\n        if k == 20: return 2\n        if k == 21: return 2\n        if k == 22: return 2\n        if k == 23: return 2\n        if k == 24: return 2\n        if k == 25: return 2\n        if k == 26: return 2\n        if k == 27: return 2\n        if k == 28: return 2\n        if k == 29: return 2\n        if k == 30: return 2\n        if k == 31: return 2\n        if k == 32: return 2\n        if k == 33: return 2\n        if k == 34: return 2\n        if k == 35: return 2\n        if k == 36: return 2\n        if k == 37: return 2\n        if k == 38: return 2\n        if k == 39: return 2\n        if k == 40: return 2\n        if k == 41: return 2\n        if k == 42: return 2\n        if k == 43: return 2\n        if k == 44: return 2\n        if k == 45: return 2\n        if k == 46: return 2\n        if k == 47: return 2\n        if k == 48: return 2\n        if k == 49: return 2\n        if k == 50: return 2\n        if k == 51: return 2\n        if k == 52: return 2\n        if k == 53: return 2\n        if k == 54: return 2\n        if k == 55: return 2\n        if k == 56: return 2\n        if k == 57: return 2\n        if k == 58: return 2\n        if k == 59: return 2\n        if k == 60: return 2\n        if k == 61: return 2\n        if k == 62: return 2\n        if k == 63: return 2\n        if k == 64: return 2\n        if k == 65: return 2\n        if k == 66: return 2\n        if k == 67: return 2\n        if k == 68: return 2\n        if k == 69: return 2\n        if k == 70: return 2\n        if k == 71: return 2\n        if k == 72: return 2\n        if k == 73: return 2\n        if k == 74: return 2\n        if k == 75: return 2\n        if k == 76: return 2\n        if k == 77: return 2\n        if k == 78: return 2\n        if k == 79: return 2\n        if k == 80: return 2\n        if k == 81: return 2\n        if k == 82: return 2\n        if k == 83: return 2\n        if k == 84: return 2\n        if k == 85: return 2\n        if"
+    }
+  ],
+  "palindrome-pairs": [
+    {
+      "task_id": "palindrome-pairs",
+      "completion": "class Solution(object):\n    def palindromePairs(self, words):\n        def is_palindrome(check):\n            return check == check[::-1]\n\n        words = {word: i for i, word in enumerate(words)}\n        valid_pals = []\n\n        for word, k in words.items():\n            for j in range(len(word) + 1):\n                pref = word[:j]\n                suf = word[j:]\n\n                if is_palindrome(pref):\n                    back = suf[::-1]\n                    if back!= word and back in words:\n                        valid_pals.append([words[back], k])\n                if j!= len(word) and is_palindrome(suf):\n                    back = pref[::-1]\n                    if back!= word and back in words:\n                        valid_pals.append([k, words[back]])\n        return valid_pals"
+    }
+  ],
+  "convert-sorted-array-to-binary-search-tree": [
+    {
+      "task_id": "convert-sorted-array-to-binary-search-tree",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def sortedArrayToBST(self, nums):\n        if not nums:\n            return None\n        mid = len(nums) // 2\n        root = TreeNode(nums[mid])\n        root.left = self.sortedArrayToBST(nums[:mid])\n        root.right = self.sortedArrayToBST(nums[mid+1:])\n        return root"
+    }
+  ],
+  "contain-virus": [
+    {
+      "task_id": "contain-virus",
+      "completion": "class Solution(object):\n    def containVirus(self, isInfected):\n        \"\"\"\n        :type isInfected: List[List[int]]\n        :rtype: int\n        \"\"\"\n        m, n = len(isInfected), len(isInfected[0])\n        walls = 0\n\n        def dfs(i, j, isInfected):\n            if not (0 <= i < m and 0 <= j < n and isInfected[i][j] == 1):\n                return 0\n            isInfected[i][j] = 0\n            return 1 + dfs(i-1, j, isInfected) + dfs(i+1, j, isInfected) + dfs(i, j-1, isInfected) + dfs(i, j+1, isInfected)\n\n        for i in range(m):\n            for j in range(n):\n                if isInfected[i][j] == 1:\n                    walls += dfs(i, j, isInfected)\n        \n        return walls"
+    }
+  ],
+  "longest-increasing-path-in-a-matrix": [
+    {
+      "task_id": "longest-increasing-path-in-a-matrix",
+      "completion": "class Solution(object):\n    def longestIncreasingPath(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: int\n        \"\"\"\n        if not matrix: return 0\n        directions = [(0,1), (0,-1), (1,0), (-1,0)]\n        m, n = len(matrix), len(matrix[0])\n        cache = [[-1]*n for _ in range(m)]\n\n        def dfs(i, j):\n            if cache[i][j]!= -1:\n                return cache[i][j]\n            val = matrix[i][j]\n            cache[i][j] = 1 + max(\n                (dfs(i+di, j+dj) for di, dj in directions if 0<=i+di<m and 0<=j+dj<n and matrix[i+di][j+dj] > val),\n                default=0)\n            return cache[i][j]\n\n        return max(dfs(i, j) for i in range(m) for j in range(n))"
+    }
+  ],
+  "number-of-digit-one": [
+    {
+      "task_id": "number-of-digit-one",
+      "completion": "class Solution(object):\n    def countDigitOne(self, n):\n        if n < 10:\n            return 1 if n == 1 else 0\n\n        digit_count = 0\n        base = 1\n        while base <= n:\n            base *= 10\n            digit_count += min(base, n + 1) - base // 10\n\n        return digit_count"
+    }
+  ],
+  "word-break-ii": [
+    {
+      "task_id": "word-break-ii",
+      "completion": "class Solution(object):\n    def wordBreak(self, s, wordDict):\n        \"\"\"\n        :type s: str\n        :type wordDict: List[str]\n        :rtype: List[str]\n        \"\"\"\n        wordSet = set(wordDict)\n        dp = [[] for _ in range(len(s) + 1)]\n        dp[0] = [[]]\n\n        for i in range(1, len(s) + 1):\n            for j in range(i):\n                if dp[j] and s[j:i] in wordSet:\n                    dp[i].extend(sentence + [s[j:i]] for sentence in dp[j])\n\n        return [\" \".join(words) for words in dp[-1]]"
+    }
+  ],
+  "binary-tree-zigzag-level-order-traversal": [
+    {
+      "task_id": "binary-tree-zigzag-level-order-traversal",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def zigzagLevelOrder(self, root):\n        if not root:\n            return []\n        \n        result, level, is_left = [], [root], True\n        \n        while level:\n            if is_left:\n                result.append([node.val for node in level])\n            else:\n                result.append([node.val for node in reversed(level)])\n            is_left = not is_left\n            level = [child for node in level for child in (node.left, node.right) if child]\n        \n        return result"
+    }
+  ],
+  "binary-watch": [
+    {
+      "task_id": "binary-watch",
+      "completion": "class Solution(object):\n    def readBinaryWatch(self, turnedOn):\n        \"\"\"\n        :type turnedOn: int\n        :rtype: List[str]\n        \"\"\"\n        # Get all possible hours and minutes\n        hours = [i for i in range(12) for j in range(4) if (i >> j) & 1]\n        minutes = [i for i in range(60) for j in range(6) if (i >> j) & 1]\n\n        # Get all possible combinations of hours and minutes\n        res = []\n        for i in range(1024):\n            if (bin(i) & '1111111111') == bin(turnedOn):\n                h = hours[i >> 6]\n                m = minutes[i & 63]\n                if h < 10:\n                    h = '0' + str(h)\n                if m < 10:\n                    m = '0' + str(m)\n                res.append('{}:{:02d}'.format(h, m))\n        return res"
+    }
+  ],
+  "pascals-triangle": [
+    {
+      "task_id": "pascals-triangle",
+      "completion": "class Solution(object):\n    def generate(self, numRows):\n        \"\"\"\n        :type numRows: int\n        :rtype: List[List[int]]\n        \"\"\"\n        if numRows == 0:\n            return []\n        result = [[1]*i for i in range(1, numRows+1)]\n        for i in range(2, numRows):\n            for j in range(1, i):\n                result[i][j] = result[i-1][j-1] + result[i-1][j]\n        return result"
+    }
+  ],
+  "power-of-three": [
+    {
+      "task_id": "power-of-three",
+      "completion": "class Solution(object):\n    def isPowerOfThree(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        if n <= 0:\n            return False\n        while n % 3 == 0:\n            n /= 3\n        return n == 1"
+    }
+  ],
+  "binary-tree-maximum-path-sum": [
+    {
+      "task_id": "binary-tree-maximum-path-sum",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def maxPathSum(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        def max_gain(node):\n            nonlocal max_sum\n            if not node:\n                return 0\n            left_gain = max(max_gain(node.left), 0)\n            right_gain = max(max_gain(node.right), 0)\n            max_sum = max(max_sum, node.val + left_gain + right_gain)\n            return node.val + max(left_gain, right_gain)\n        \n        max_sum = float('-inf')\n        max_gain(root)\n        return max_sum"
+    }
+  ],
+  "trapping-rain-water-ii": [
+    {
+      "task_id": "trapping-rain-water-ii",
+      "completion": "import heapq\n\nclass Solution(object):\n    def trapRainWater(self, heightMap):\n        if not heightMap or not heightMap[0]:\n            return 0\n\n        m, n = len(heightMap), len(heightMap[0])\n        heap = [(i, j, heightMap[i][j]) for i in range(m) for j in range(n) if heightMap[i][j]]\n        heapq.heapify(heap)\n        visited = set()\n\n        while heap:\n            i, j, height = heapq.heappop(heap)\n            if (i, j) in visited:\n                continue\n            visited.add((i, j))\n\n            if i > 0 and j > 0 and heightMap[i][j] < heightMap[i-1][j] and (i-1, j) not in visited:\n                heapq.heappush(heap, (i-1, j, heightMap[i-1][j]))\n            if i < m-1 and j > 0 and heightMap[i][j] < heightMap[i+1][j] and (i+1, j) not in visited:\n                heapq.heappush(heap, (i+1, j, heightMap[i+1][j]))\n            if i > 0 and j < n-1 and heightMap[i][j] < heightMap[i-1][j+1] and (i-1, j+1) not in visited:\n                heapq.heappush(heap, (i-1, j+1, heightMap[i-1][j+1]))\n            if i < m-1 and j < n-1 and heightMap[i][j] < heightMap[i+1][j+1] and (i+1, j+1) not in visited:\n                heapq.heappush(heap, (i+1, j+1, heightMap[i+1][j+1]))\n\n        return sum(heightMap[i][j] for i, j in visited) - max(heightMap[i][j] for i, j in visited)"
+    }
+  ],
+  "valid-palindrome": [
+    {
+      "task_id": "valid-palindrome",
+      "completion": "class Solution(object):\n    def isPalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        # filter out non-alphanumeric characters and convert to lowercase\n        s = ''.join(filter(str.isalnum, s)).lower()\n        \n        # compare s with its reverse\n        return s == ''.join(reversed(s))"
+    }
+  ],
+  "sliding-window-median": [
+    {
+      "task_id": "sliding-window-median",
+      "completion": "import heapq\n\nclass Solution(object):\n    def medianSlidingWindow(self, nums, k):\n        if k == 0: return []\n        min_heap, max_heap, result = [], [], []\n        for i, num in enumerate(nums):\n            # Add number to heaps\n            if len(min_heap) < k:\n                heapq.heappush(min_heap, num)\n            else:\n                heapq.heappush(max_heap, -num)\n            # Balance heaps\n            if len(min_heap) > len(max_heap) + 1:\n                heapq.heappush(max_heap, -heapq.heappop(min_heap))\n            elif len(max_heap) > len(min_heap) + 1:\n                heapq.heappush(min_heap, -heapq.heappop(max_heap))\n            # Calculate median\n            if i >= k - 1:\n                if len(min_heap) == len(max_heap):\n                    median = (min_heap[0] - max_heap[0]) / 2.0\n                else:\n                    median = min_heap[0]\n                result.append(median)\n        return result"
+    }
+  ],
+  "rotate-list": [
+    {
+      "task_id": "rotate-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def rotateRight(self, head, k):\n        if not head:\n            return None\n        \n        # find the length of the linked list\n        length = 1\n        cur = head\n        while cur.next:\n            length += 1\n            cur = cur.next\n        \n        # find the new head and the previous node of the new head\n        new_head = head\n        for _ in range(length - k % length - 1):\n            new_head = new_head.next\n        \n        # rotate the list\n        cur.next = head\n        head = new_head.next\n        new_head.next = None\n        \n        return head"
+    }
+  ],
+  "ugly-number": [
+    {
+      "task_id": "ugly-number",
+      "completion": "class Solution(object):\n    def isUgly(self, n):\n        if n < 1:\n            return False\n        while n % 2 == 0:\n            n /= 2\n        while n % 3 == 0:\n            n /= 3\n        while n % 5 == 0:\n            n /= 5\n        return n == 1"
+    }
+  ],
+  "falling-squares": [
+    {
+      "task_id": "falling-squares",
+      "completion": "class Solution(object):\n    def fallingSquares(self, positions):\n        \"\"\"\n        :type positions: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        # Initialize an empty list to keep track of the maximum height at each point in time\n        heights = [0]\n\n        for pos in positions:\n            # Calculate the left and right edges of the square\n            left, right = pos[0], pos[0] + pos[1]\n\n            # Find the maximum height before the square is dropped\n            max_height_before = max(heights[left:right])\n\n            # Calculate the new height of the square\n            new_height = max_height_before + pos[1]\n\n            # Update the height list\n            heights[left:right] = [new_height] * (right - left)\n\n        return heights"
+    }
+  ],
+  "sum-of-left-leaves": [
+    {
+      "task_id": "sum-of-left-leaves",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def sumOfLeftLeaves(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        if not root:\n            return 0\n        elif not root.left and not root.right:\n            return 0\n        else:\n            return root.val + self.sumOfLeftLeaves(root.left) + self.sumOfLeftLeaves(root.right)"
+    }
+  ],
+  "max-sum-of-rectangle-no-larger-than-k": [
+    {
+      "task_id": "max-sum-of-rectangle-no-larger-than-k",
+      "completion": "class Solution(object):\n    def maxSumSubmatrix(self, matrix, k):\n        m, n = len(matrix), len(matrix[0])\n        prefix = [[0]*(n+1) for _ in range(m+1)]\n        for i in range(1, m+1):\n            for j in range(1, n+1):\n                prefix[i][j] = prefix[i-1][j] + prefix[i][j-1] - prefix[i-1][j-1] + matrix[i-1][j-1]\n        dp = [[0]*(n+1) for _ in range(m+1)]\n        for i in range(1, m+1):\n            for j in range(1, n+1):\n                dp[i][j] = min(k+1, prefix[i][j])\n                for p in range(1, i+1):\n                    for q in range(1, j+1):\n                        dp[i][j] = min(dp[i][j], dp[p-1][q-1] + prefix[i][j] - prefix[p-1][j] - prefix[i][q-1] + prefix[p-1][q-1])\n        return dp[m][n]"
+    }
+  ],
+  "divide-two-integers": [
+    {
+      "task_id": "divide-two-integers",
+      "completion": "class Solution(object):\n    def divide(self, dividend, divisor):\n        \"\"\"\n        :type dividend: int\n        :type divisor: int\n        :rtype: int\n        \"\"\"\n        INT_MAX = 2**31 - 1\n        INT_MIN = -2**31\n        if dividend == INT_MIN and divisor == -1:\n            return INT_MAX\n        if dividend == INT_MAX and divisor == 1:\n            return INT_MIN\n        if dividend < 0:\n            dividend = -dividend\n            if divisor < 0:\n                divisor = -divisor\n            else:\n                return -self.divide(dividend, divisor)\n        if divisor < 0:\n            divisor = -divisor\n        quotient = 0\n        while dividend >= divisor:\n            dividend -= divisor\n            quotient += 1\n        return quotient"
+    }
+  ],
+  "surrounded-regions": [
+    {
+      "task_id": "surrounded-regions",
+      "completion": "class Solution(object):\n    def solve(self, board):\n        \"\"\"\n        :type board: List[List[str]]\n        :rtype: None Do not return anything, modify board in-place instead.\n        \"\"\"\n        if not board:\n            return\n        m, n = len(board), len(board[0])\n\n        def dfs(i, j):\n            if i < 0 or i >= m or j < 0 or j >= n or board[i][j]!= 'X':\n                return\n            board[i][j] = 'T'\n            dfs(i+1, j)\n            dfs(i-1, j)\n            dfs(i, j+1)\n            dfs(i, j-1)\n\n        def flip(i, j):\n            if i < 0 or i >= m or j < 0 or j >= n or board[i][j]!= 'O':\n                return\n            board[i][j] = 'X'\n            flip(i+1, j)\n            flip(i-1, j)\n            flip(i, j+1)\n            flip(i, j-1)\n\n        for i in range(m):\n            for j in range(n):\n                if board[i][j] == 'X':\n                    dfs(i, j)\n                elif board[i][j] == 'O':\n                    flip(i, j)\n\n        for i in range(m):\n            for j in range(n):\n                if board[i][j] == 'T':\n                    board[i][j] = 'O'"
+    }
+  ],
+  "two-sum": [
+    {
+      "task_id": "two-sum",
+      "completion": "class Solution(object):\n    def twoSum(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: List[int]\n        \"\"\"\n        num_dict = {}\n        for i, num in enumerate(nums):\n            complement = target - num\n            if complement in num_dict:\n                return [num_dict[complement], i]\n            num_dict[num] = i"
+    }
+  ],
+  "24-game": [
+    {
+      "task_id": "24-game",
+      "completion": "class Solution(object):\n    def judgePoint24(self, cards):\n        \"\"\"\n        :type cards: List[int]\n        :rtype: bool\n        \"\"\"\n        if not cards:\n            return False\n        if len(cards) == 1:\n            return abs(cards[0] - 24) < 1e-6\n        for i in range(len(cards)):\n            for j in range(len(cards)):\n                if i!= j:\n                    new_cards = [cards[k] for k in range(len(cards)) if i!= k and j!= k]\n                    if self.judgePoint24(new_cards):\n                        if cards[i] > cards[j]: \n                            return abs(cards[i] + cards[j] - 24) < 1e-6\n                        elif cards[i] < cards[j]: \n                            return abs(cards[i] - cards[j] - 24) < 1e-6\n                        else: \n                            return abs(cards[i] * cards[j] - 24) < 1e-6\n        return False"
+    }
+  ],
+  "wildcard-matching": [
+    {
+      "task_id": "wildcard-matching",
+      "completion": "class Solution(object):\n    def isMatch(self, s, p):\n        if p == '':\n            return s == ''\n        if p[0] == '*':\n            return self.isMatch(s, p[1:]) or (s!= '' and self.isMatch(s[1:], p))\n        if p[0] == '?':\n            return s!= '' and self.isMatch(s[1:], p[1:])\n        if s!= '' and (p[0] == s[0] or p[0] == '.'):\n            return self.isMatch(s[1:], p[1:])\n        return False"
+    }
+  ],
+  "majority-element": [
+    {
+      "task_id": "majority-element",
+      "completion": "class Solution(object):\n    def majorityElement(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        count = {}\n        for num in nums:\n            if num in count:\n                count[num] += 1\n            else:\n                count[num] = 1\n        return max(count, key=count.get)"
+    }
+  ],
+  "reconstruct-itinerary": [
+    {
+      "task_id": "reconstruct-itinerary",
+      "completion": "class Solution(object):\n    def findItinerary(self, tickets):\n        \"\"\"\n        :type tickets: List[List[str]]\n        :rtype: List[str]\n        \"\"\"\n        # Sort the tickets in descending order, so that we can process the ticket with the lowest lexical order first.\n        tickets.sort(reverse=True)\n        \n        # Initialize the itinerary with the starting airport, JFK.\n        itinerary = ['JFK']\n        \n        # For each ticket, add the destination airport to the itinerary.\n        for ticket in tickets:\n            itinerary.append(ticket[1])\n        \n        return itinerary"
+    }
+  ],
+  "4sum": [
+    {
+      "task_id": "4sum",
+      "completion": "from typing import List\nclass Solution(object):\n    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:\n        nums.sort()\n        res = []\n        n = len(nums)\n        for i in range(n-3):\n            if i > 0 and nums[i] == nums[i-1]:\n                continue\n            for j in range(i+1, n-2):\n                if j > i+1 and nums[j] == nums[j-1]:\n                    continue\n                l, r = j+1, n-1\n                while l < r:\n                    total = nums[i] + nums[j] + nums[l] + nums[r]\n                    if total == target:\n                        res.append([nums[i], nums[j], nums[l], nums[r]])\n                        while l < r and nums[l] == nums[l+1]:\n                            l += 1\n                        while l < r and nums[r] == nums[r-1]:\n                            r -= 1\n                        l += 1; r -= 1\n        return res"
+    }
+  ],
+  "the-skyline-problem": [
+    {
+      "task_id": "the-skyline-problem",
+      "completion": "import heapq\n\nclass Solution(object):\n    def getSkyline(self, buildings):\n        # Add buildings start and end into the events\n        # At start of building: -1 * height of building\n        # At end of building: height of building\n        events = [(L, -H, R) for L, R, H in buildings]\n        events += list({(R, 0, 0) for _, R, _ in buildings})\n\n        # Sort the events in ascending order\n        events.sort()\n\n        # Max heap to store the heights\n        res = [(0, 0)]  # Result [(x, height)]\n        live = [(0, float(\"inf\"))]  # Current live buildings [(height, end time)]\n        for pos, negH, R in events:\n            while live[0][1] <= pos:  # While building ends <= curr pos\n                heapq.heappop(live)\n            if negH:  # Building starts\n                heapq.heappush(live, (negH, R))\n            if res[-1][1]!= -live[0][0]:  # Check if heights are different\n                res += [(pos, -live[0][0])]\n        return res[1:]  # Exclude the first item (0,0) we added for initial computation"
+    }
+  ],
+  "reverse-string": [
+    {
+      "task_id": "reverse-string",
+      "completion": "class Solution(object):\n    def reverseString(self, s):\n        \"\"\"\n        :type s: List[str]\n        :rtype: None Do not return anything, modify s in-place instead.\n        \"\"\"\n        # Use two pointers approach to swap characters in-place.\n        left, right = 0, len(s) - 1\n        while left < right:\n            s[left], s[right] = s[right], s[left]\n            left += 1\n            right -= 1"
+    }
+  ],
+  "reverse-linked-list": [
+    {
+      "task_id": "reverse-linked-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def reverseList(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        prev = None\n        while head:\n            next_node = head.next\n            head.next = prev\n            prev = head\n            head = next_node\n        return prev"
+    }
+  ],
+  "triangle": [
+    {
+      "task_id": "triangle",
+      "completion": "class Solution(object):\n    def minimumTotal(self, triangle):\n        \"\"\"\n        :type triangle: List[List[int]]\n        :rtype: int\n        \"\"\"\n        if not triangle:\n            return 0\n        res = triangle[-1]\n        for i in range(len(triangle)-2, -1, -1):\n            for j in range(len(triangle[i])):\n                res[j] = min(res[j], res[j+1]) + triangle[i][j]\n        return res[0]"
+    }
+  ],
+  "integer-to-english-words": [
+    {
+      "task_id": "integer-to-english-words",
+      "completion": "class Solution(object):\n    def numberToWords(self, num):\n        def one(n):\n            switcher = {\n                1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',\n                6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine'\n            }\n            return switcher.get(n)\n\n        def two_less_20(n):\n            switcher = {\n                10: 'Ten', 11: 'Eleven', 12: 'Twelve', 13: 'Thirteen',\n                14: 'Fourteen', 15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen',\n                18: 'Eighteen', 19: 'Nineteen'\n            }\n            return switcher.get(n)\n\n        def ten(n):\n            switcher = {2: 'Twenty', 3: 'Thirty', 4: 'Forty', 5: 'Fifty',\n                        6: 'Sixty', 7: 'Seventy', 8: 'Eighty', 9: 'Ninety' }\n            return switcher.get(n)\n\n        def two(n):\n            if n < 10: return one(n)\n            if n < 20: return two_less_20(n)\n            tens, remainder = divmod(n, 10)\n            return ten(tens) + '-' + one(remainder) if remainder else ten(tens)\n\n        def three(n):\n            hundred, remainder = divmod(n, 100)\n            return one(hundred) +'Hundred' +'and'+ two(remainder) if hundred and remainder else one(hundred) +'Hundred' if hundred else two(remainder)\n\n        billion, remainder = divmod(num, 1000000000)\n        million, remainder = divmod(remainder, 1000000)\n        thousand, remainder = divmod(remainder, 1000)\n        result = ''\n        if billion: result += three(billion) +'Billion'\n        if million: result +='' if result else '' + three(million) +'Thousand'\n        if thousand: result +='' if result else '' + three(thousand) + ''\n        if remainder: result +='' if result else '' + three(remainder)\n        return result"
+    }
+  ],
+  "k-inverse-pairs-array": [
+    {
+      "task_id": "k-inverse-pairs-array",
+      "completion": "class Solution(object):\n    def kInversePairs(self, n, k):\n        mod = 10**9 + 7\n        dp = [[0]*(k+1) for _ in range(n+1)]\n        dp[0][0] = 1\n        for i in range(1, n+1):\n            dp[i][0] = 1\n            for j in range(1, i+1):\n                dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % mod\n        return dp[n][k]"
+    }
+  ],
+  "swap-nodes-in-pairs": [
+    {
+      "task_id": "swap-nodes-in-pairs",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def swapPairs(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        # Create a new head node for the result\n        new_head = ListNode(0)\n        new_head.next = head\n\n        # Start swapping\n        curr = new_head\n        while curr.next and curr.next.next:\n            # Swap the two nodes\n            temp = curr.next\n            curr.next = curr.next.next\n            temp.next = curr.next\n            curr.next = temp\n            \n            # Move two nodes ahead\n            curr = curr.next.next\n\n        return new_head.next"
+    }
+  ],
+  "path-sum": [
+    {
+      "task_id": "path-sum",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def hasPathSum(self, root, targetSum):\n        if not root:\n            return False\n        if not root.left and not root.right:\n            return root.val == targetSum\n        return self.hasPathSum(root.left, targetSum - root.val) or self.hasPathSum(root.right, targetSum - root.val)"
+    }
+  ],
+  "partition-list": [
+    {
+      "task_id": "partition-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def partition(self, head, x):\n        less_head = less = ListNode(0)\n        more_head = more = ListNode(0)\n\n        while head:\n            if head.val < x:\n                less.next = head\n                less = less.next\n            else:\n                more.next = head\n                more = more.next\n            head = head.next\n        \n        more.next = None\n        less.next = more_head.next\n\n        return less_head.next"
+    }
+  ],
+  "redundant-connection-ii": [
+    {
+      "task_id": "redundant-connection-ii",
+      "completion": "class Solution(object):\n    def findRedundantDirectedConnection(self, edges):\n        n = len(edges)\n        parent = list(range(n + 1))\n        redundant = None\n\n        def find(x):\n            if parent[x]!= x:\n                parent[x] = find(parent[x])\n            return parent[x]\n\n        def union(x, y):\n            nonlocal redundant\n            p1, p2 = find(x), find(y)\n            if p1 == p2:\n                redundant = [x, y]\n            else:\n                parent[p2] = p1\n\n        for x, y in edges:\n            union(x, y)\n\n        for x, y in edges:\n            if x!= y and find(x) == find(y):\n                return [x, y]\n\n        return redundant"
+    }
+  ],
+  "permutations-ii": [
+    {
+      "task_id": "permutations-ii",
+      "completion": "class Solution(object):\n    def permuteUnique(self, nums):\n        def dfs(nums, path, res):\n            if not nums:\n                res.append(path)\n            for i in range(len(nums)):\n                if i > 0 and nums[i] == nums[i-1]:\n                    continue;\n                dfs(nums[:i]+nums[i+1:], path+[nums[i]], res)\n        nums.sort()\n        res = []\n        dfs(nums, [], res)\n        return res"
+    }
+  ],
+  "add-digits": [
+    {
+      "task_id": "add-digits",
+      "completion": "class Solution(object):\n    def addDigits(self, num):\n        while num >= 10:\n            num = sum(map(int, str(num)))\n        return num"
+    }
+  ],
+  "single-number": [
+    {
+      "task_id": "single-number",
+      "completion": "class Solution(object):\n    def singleNumber(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        for num in nums:\n            result ^= num\n        return result"
+    }
+  ],
+  "length-of-last-word": [
+    {
+      "task_id": "length-of-last-word",
+      "completion": "class Solution(object):\n    def lengthOfLastWord(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        words = s.split()\n        return len(words[-1])"
+    }
+  ],
+  "cherry-pickup": [
+    {
+      "task_id": "cherry-pickup",
+      "completion": "class Solution(object):\n    def cherryPickup(self, grid):\n        n = len(grid)\n        dp = [[-float('inf')]*n for _ in range(n)]\n        dp[n-1][n-1] = grid[n-1][n-1]\n        \n        # start from bottom right, moving towards top left\n        for i in range(n-1, -1, -1):\n            for j in range(n-1, -1, -1):\n                # if it's the destination, we can only move to the right or up\n                if i == n-1 and j == n-1:\n                    dp[i][j] = max(dp[i+1][j], dp[i][j+1]) + grid[i][j]\n                # if it's not the destination, we can move to the right, up, or diagonally\n                else:\n                    dp[i][j] = max(dp[i+1][j], dp[i][j+1], dp[i+1][j+1]) + grid[i][j]\n        \n        # start from top left, moving towards bottom right\n        res = dp[0][0]\n        for i in range(n):\n            for j in range(n):\n                # if it's the starting point, we can only move to the left or down\n                if i == 0 and j == 0:\n                    res = max(res, dp[i][j+1], dp[i+1][j])\n                # if it's not the starting point, we can move to the left, down, or diagonally\n                else:\n                    res = max(res, dp[i][j+1], dp[i+1][j], dp[i+1][j+1])\n        \n        return res"
+    }
+  ],
+  "student-attendance-record-ii": [
+    {
+      "task_id": "student-attendance-record-ii",
+      "completion": "class Solution(object):\n    def checkRecord(self, n):\n        MOD = 10**9 + 7\n        if n == 1: return 3\n        if n == 2: return 8\n        arr = [0, 1, 1, 3, 8, 19]\n        sums = [0, 3, 6, 11, 21, 43]\n        for i in range(5, n):\n            next_val = (sums[i-2] + arr[i-2] + arr[i-1]) % MOD\n            arr.append(next_val)\n            sums.append((sums[i] + next_val) % MOD)\n        return arr[n-1]"
+    }
+  ],
+  "happy-number": [
+    {
+      "task_id": "happy-number",
+      "completion": "class Solution(object):\n    def isHappy(self, n):\n        def get_next(n):\n            total_sum = 0\n            while n:\n                n, digit = divmod(n, 10)\n                total_sum += digit ** 2\n            return total_sum\n\n        seen = set()\n        while n!= 1 and n not in seen:\n            seen.add(n)\n            n = get_next(n)\n\n        return n == 1"
+    }
+  ],
+  "search-insert-position": [
+    {
+      "task_id": "search-insert-position",
+      "completion": "class Solution(object):\n    def searchInsert(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        left, right = 0, len(nums)\n        \n        while left < right:\n            mid = (left + right) // 2\n            if nums[mid] < target:\n                left = mid + 1\n            else:\n                right = mid\n                \n        return left"
+    }
+  ],
+  "jump-game": [
+    {
+      "task_id": "jump-game",
+      "completion": "class Solution(object):\n    def canJump(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        n = len(nums)\n        reachable_idx = [0]\n        for i in range(1, n):\n            for j in range(i):\n                if i <= j + nums[j] and j in reachable_idx:\n                    reachable_idx.append(i)\n                    break\n        return reachable_idx[-1] == n-1"
+    }
+  ],
+  "minimum-path-sum": [
+    {
+      "task_id": "minimum-path-sum",
+      "completion": "class Solution(object):\n    def minPathSum(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        m, n = len(grid), len(grid[0])\n        dp = [[0]*n for _ in range(m)]\n        dp[0][0] = grid[0][0]\n\n        for i in range(1, m):\n            dp[i][0] = dp[i-1][0] + grid[i][0]\n\n        for j in range(1, n):\n            dp[0][j] = dp[0][j-1] + grid[0][j]\n\n        for i in range(1, m):\n            for j in range(1, n):\n                dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]\n\n        return dp[-1][-1]"
+    }
+  ],
+  "count-and-say": [
+    {
+      "task_id": "count-and-say",
+      "completion": "class Solution(object):\n    def countAndSay(self, n):\n        s = \"1\"\n        for i in range(n-1):\n            s = ''.join(str(len(list(group))) + digit for digit, group in itertools.groupby(s))\n        return s"
+    }
+  ],
+  "split-array-largest-sum": [
+    {
+      "task_id": "split-array-largest-sum",
+      "completion": "from typing import List\n\nclass Solution(object):\n    def splitArray(self, nums: List[int], k: int) -> int:\n        n = len(nums)\n        prefix_sum = [0] * (n + 1)\n        for i in range(n):\n            prefix_sum[i + 1] = prefix_sum[i] + nums[i]\n\n        dp = [[float('inf')]*n for _ in range(k)]\n        for j in range(n):\n            dp[0][j] = prefix_sum[j + 1]\n\n        for i in range(1, k):\n            for j in range(i, n):\n                for l in range(j):\n                    dp[i][j] = min(dp[i][j], dp[i - 1][l] + prefix_sum[j + 1] - prefix_sum[l + 1])\n        \n        return dp[-1][-1]"
+    }
+  ],
+  "search-in-rotated-sorted-array": [
+    {
+      "task_id": "search-in-rotated-sorted-array",
+      "completion": "class Solution(object):\n    def search(self, nums, target):\n        left, right = 0, len(nums) - 1\n        while left <= right:\n            mid = (left + right) // 2\n            if nums[mid] == target:\n                return mid\n            elif nums[mid] >= nums[left]:\n                if nums[left] <= target < nums[mid]:\n                    right = mid - 1\n                else:\n                    left = mid + 1\n            else:\n                if nums[mid] < target <= nums[right]:\n                    left = mid + 1\n                else:\n                    right = mid - 1\n        return -1"
+    }
+  ],
+  "letter-combinations-of-a-phone-number": [
+    {
+      "task_id": "letter-combinations-of-a-phone-number",
+      "completion": "class Solution(object):\n    def letterCombinations(self, digits):\n        \"\"\"\n        :type digits: str\n        :rtype: List[str]\n        \"\"\"\n        # Mapping of digits to letters\n        map_digits_to_letters = {\n            '2': ['a', 'b', 'c'],\n            '3': ['d', 'e', 'f'],\n            '4': ['g', 'h', 'i'],\n            '5': ['j', 'k', 'l'],\n            '6': ['m', 'n', 'o'],\n            '7': ['p', 'q', 'r','s'],\n            '8': ['t', 'u', 'v'],\n            '9': ['w', 'x', 'y', 'z']\n        }\n        \n        # Initial result list\n        result = []\n        \n        # Depth-first search helper function\n        def dfs(index, path):\n            # If all digits are used, add the path to the result list\n            if index == len(digits):\n                result.append(path)\n                return\n            # Use each letter in the current digit to generate new paths\n            for letter in map_digits_to_letters[digits[index]]:\n                dfs(index + 1, path + letter)\n        \n        # Start the depth-first search\n        dfs(0, '')\n        return result"
+    }
+  ],
+  "combination-sum": [
+    {
+      "task_id": "combination-sum",
+      "completion": "class Solution(object):\n    def combinationSum(self, candidates, target):\n        \"\"\"\n        :type candidates: List[int]\n        :type target: int\n        :rtype: List[List[int]]\n        \"\"\"\n        def dfs(candidates, target, start, path, res):\n            if target < 0:\n                return  # backtracking\n            if target == 0:\n                res.append(path)\n                return \n            for i in range(start, len(candidates)):\n                dfs(candidates, target-candidates[i], i, path+[candidates[i]], res)\n                \n        res = []\n        candidates.sort()\n        dfs(candidates, target, 0, [], res)\n        return res"
+    }
+  ],
+  "find-the-closest-palindrome": [
+    {
+      "task_id": "find-the-closest-palindrome",
+      "completion": "class Solution(object):\n    def nearestPalindromic(self, n):\n        \"\"\"\n        :type n: str\n        :rtype: str\n        \"\"\"\n        num = int(n)\n        str_num = str(num)\n        length = len(str_num)\n\n        # Generate all possible palindromes\n        palindromes = set()\n        for i in range(length):\n            for j in range(length-i+1):\n                s = str_num[i:j]\n                if s == s[::-1]:\n                    palindromes.add(int(s))\n\n        # Find the closest palindrome\n        closest = min(palindromes, key=lambda x: (abs(x - num), x))\n        \n        return str(closest)"
+    }
+  ],
+  "spiral-matrix-ii": [
+    {
+      "task_id": "spiral-matrix-ii",
+      "completion": "class Solution(object):\n    def generateMatrix(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[List[int]]\n        \"\"\"\n        matrix = [[0]*n for _ in range(n)]\n        dx, dy = [0, 1, 0, -1], [1, 0, -1, 0]\n        x, y, c = 0, -1, 1\n        for _ in range(n + n - 1):\n            for _ in range(n):\n                x += dx[c]\n                y += dy[c]\n                matrix[x][y] = c\n                c += 1\n        return matrix"
+    }
+  ],
+  "reverse-integer": [
+    {
+      "task_id": "reverse-integer",
+      "completion": "class Solution(object):\n    def reverse(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: int\n        \"\"\"\n        if x < 0:\n            x = -1 * int(str(x)[::-1])\n        else:\n            x = int(str(x)[::-1])\n        if x > 2**31 - 1 or x < -2**31:\n            return 0\n        else:\n            return x"
+    }
+  ],
+  "rotate-image": [
+    {
+      "task_id": "rotate-image",
+      "completion": "class Solution(object):\n    def rotate(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: None Do not return anything, modify matrix in-place instead.\n        \"\"\"\n        n = len(matrix)\n        for i in range(n):\n            for j in range(i, n):\n                matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]\n        for i in range(n):\n            matrix[i] = matrix[i][::-1]"
+    }
+  ],
+  "maximum-product-subarray": [
+    {
+      "task_id": "maximum-product-subarray",
+      "completion": "class Solution(object):\n    def maxProduct(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        if not nums:\n            return 0\n            \n        max_product = nums[0]\n        min_product = nums[0]\n        result = nums[0]\n        \n        for i in range(1, len(nums)):\n            if nums[i] < 0:\n                max_product, min_product = min_product, max_product\n                \n            max_product = max(nums[i], max_product * nums[i])\n            min_product = min(nums[i], min_product * nums[i])\n            \n            result = max(result, max_product)\n        \n        return result"
+    }
+  ],
+  "frog-jump": [
+    {
+      "task_id": "frog-jump",
+      "completion": "class Solution(object):\n    def canCross(self, stones):\n        if stones[1]!= 1:\n            return False\n        dp = [set() for _ in range(len(stones))]\n        dp[1].add(1)\n        for i in range(2, len(stones)):\n            for j in range(i):\n                diff = stones[i] - stones[j]\n                if diff-1 in dp[j] or diff in dp[j] or (diff+1 in dp[j] and diff+1 <= i):\n                    dp[i].add(diff)\n                    if i == len(stones) - 1:\n                        return True\n        return False"
+    }
+  ],
+  "relative-ranks": [
+    {
+      "task_id": "relative-ranks",
+      "completion": "class Solution(object):\n    def findRelativeRanks(self, score):\n        \"\"\"\n        :type score: List[int]\n        :rtype: List[str]\n        \"\"\"\n        athletes = sorted([(score, i+1) for i, score in enumerate(score)], reverse=True)\n        ranks = [\"Gold Medal\" if i == 0 else \"Silver Medal\" if i == 1 else \"Bronze Medal\" if i == 2 else str(i+1) for i, (_, rank) in enumerate(athletes)]\n        return ranks"
+    }
+  ],
+  "longest-substring-without-repeating-characters": [
+    {
+      "task_id": "longest-substring-without-repeating-characters",
+      "completion": "class Solution(object):\n    def lengthOfLongestSubstring(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        if not s:\n            return 0\n\n        left, right = 0, 0\n        lookup = set()\n        max_len = 0\n\n        while right < len(s):\n            if s[right] not in lookup:\n                lookup.add(s[right])\n                right += 1\n                max_len = max(max_len, right - left)\n            else:\n                lookup.remove(s[left])\n                left += 1\n\n        return max_len"
+    }
+  ],
+  "substring-with-concatenation-of-all-words": [
+    {
+      "task_id": "substring-with-concatenation-of-all-words",
+      "completion": "from collections import Counter\n\nclass Solution(object):\n    def findSubstring(self, s, words):\n        word_counter = Counter(words)\n        word_length = len(words[0])\n        total_length = len(s)\n        result = []\n        \n        for i in range(total_length - word_length * len(words) + 1):\n            if s[i:i+word_length] in word_counter:\n                if word_counter[s[i:i+word_length]] > 0:\n                    result.append(i)\n                    word_counter[s[i:i+word_length]] -= 1\n        \n        return result"
+    }
+  ],
+  "max-chunks-to-make-sorted-ii": [
+    {
+      "task_id": "max-chunks-to-make-sorted-ii",
+      "completion": "class Solution(object):\n    def maxChunksToSorted(self, arr):\n        max_seen = 0\n        chunks = 0\n        for num in arr:\n            max_seen = max(max_seen, num)\n            if max_seen == num:\n                chunks += 1\n        return chunks"
+    }
+  ],
+  "insertion-sort-list": [
+    {
+      "task_id": "insertion-sort-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def insertionSortList(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        if not head or not head.next:\n            return head\n\n        # Initialize a new sorted list\n        sorted_head = ListNode(0)\n        sorted_head.next = head\n        curr_node = head.next\n\n        # Iterate over the original list\n        while curr_node:\n            # If the current node is smaller than the head of the sorted list,\n            # insert it at the beginning\n            if curr_node.val < sorted_head.next.val:\n                temp = sorted_head.next\n                sorted_head.next = curr_node\n                curr_node.next = temp\n                sorted_head = sorted_head.next\n            else:\n                # Otherwise, find the right place to insert the current node\n                prev_node = sorted_head\n                while prev_node.next.val < curr_node.val:\n                    prev_node = prev_node.next\n                temp = curr_node.next\n                curr_node.next = prev_node.next\n                prev_node.next = curr_node\n                curr_node = temp\n\n            # Move on to the next node\n            curr_node = curr_node.next\n\n        return sorted_head.next"
+    }
+  ],
+  "remove-duplicates-from-sorted-list-ii": [
+    {
+      "task_id": "remove-duplicates-from-sorted-list-ii",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def deleteDuplicates(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        if head is None:\n            return None\n\n        curr = head\n        while curr.next is not None:\n            if curr.val == curr.next.val:\n                curr.next = curr.next.next\n            else:\n                curr = curr.next\n\n        return head"
+    }
+  ],
+  "3sum": [
+    {
+      "task_id": "3sum",
+      "completion": "class Solution(object):\n    def threeSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        nums.sort()\n        result = []\n        for i in range(len(nums)-2):\n            if i > 0 and nums[i] == nums[i-1]:\n                continue\n            l, r = i+1, len(nums)-1\n            while l < r:\n                s = nums[i] + nums[l] + nums[r]\n                if s < 0:\n                    l += 1\n                elif s > 0:\n                    r -= 1\n                else:\n                    result.append([nums[i], nums[l], nums[r]])\n                    while l < r and nums[l] == nums[l+1]:\n                        l += 1\n                    while l < r and nums[r] == nums[r-1]:\n                        r -= 1\n                    l += 1\n                    r -= 1\n        return result"
+    }
+  ],
+  "edit-distance": [
+    {
+      "task_id": "edit-distance",
+      "completion": "class Solution(object):\n    def minDistance(self, word1, word2):\n        \"\"\"\n        :type word1: str\n        :type word2: str\n        :rtype: int\n        \"\"\"\n        m, n = len(word1), len(word2)\n        dp = [[0] * (n + 1) for _ in range(m + 1)]\n\n        for i in range(m + 1):\n            for j in range(n + 1):\n                if i == 0:\n                    dp[i][j] = j\n                elif j == 0:\n                    dp[i][j] = i\n                elif word1[i - 1] == word2[j - 1]:\n                    dp[i][j] = dp[i - 1][j - 1]\n                else:\n                    dp[i][j] = 1 + min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1])\n\n        return dp[m][n]"
+    }
+  ],
+  "hamming-distance": [
+    {
+      "task_id": "hamming-distance",
+      "completion": "class Solution(object):\n    def hammingDistance(self, x, y):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        xor = x ^ y\n        count = 0\n        while xor:\n            count += xor & 1\n            xor >>= 1\n        return count"
+    }
+  ],
+  "binary-tree-paths": [
+    {
+      "task_id": "binary-tree-paths",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def binaryTreePaths(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[str]\n        \"\"\"\n        if not root:\n            return []\n\n        if not root.left and not root.right:\n            return [str(root.val)]\n\n        paths = []\n        if root.left:\n            paths.extend(self.binaryTreePaths(root.left) + [str(root.val) + \"->\" + path for path in self.binaryTreePaths(root.left)])\n        if root.right:\n            paths.extend(self.binaryTreePaths(root.right) + [str(root.val) + \"->\" + path for path in self.binaryTreePaths(root.right)])\n        return paths"
+    }
+  ],
+  "reverse-pairs": [
+    {
+      "task_id": "reverse-pairs",
+      "completion": "class Solution(object):\n    def reversePairs(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        count = 0\n        for i in range(len(nums)):\n            for j in range(i+1, len(nums)):\n                if nums[i] > 2 * nums[j]:\n                    count += 1\n        return count"
+    }
+  ],
+  "reaching-points": [
+    {
+      "task_id": "reaching-points",
+      "completion": "class Solution(object):\n    def reachingPoints(self, sx, sy, tx, ty):\n        while sx < tx and sy < ty:\n            if sx < sy:\n                sx += sy\n            else:\n                sy += sx\n        return sx == tx and sy == ty"
+    }
+  ],
+  "compare-version-numbers": [
+    {
+      "task_id": "compare-version-numbers",
+      "completion": "class Solution(object):\n    def compareVersion(self, version1, version2):\n        v1 = list(map(int, (v or 0 for v in (version1.split('.')))))\n        v2 = list(map(int, (v or 0 for v in (version2.split('.')))))\n        \n        while v1 and v1[-1] == 0:\n            v1.pop()\n        while v2 and v2[-1] == 0:\n            v2.pop()\n\n        if v1 == v2:\n            return 0\n        elif v1 > v2:\n            return 1\n        else:\n            return -1"
+    }
+  ],
+  "best-time-to-buy-and-sell-stock-ii": [
+    {
+      "task_id": "best-time-to-buy-and-sell-stock-ii",
+      "completion": "class Solution(object):\n    def maxProfit(self, prices):\n        if not prices or len(prices) == 1:\n            return 0\n        max_profit = 0\n        min_price = prices[0]\n        for price in prices:\n            min_price = min(min_price, price)\n            profit = price - min_price\n            max_profit = max(max_profit, profit)\n        return max_profit"
+    }
+  ],
+  "course-schedule-iii": [
+    {
+      "task_id": "course-schedule-iii",
+      "completion": "class Solution(object):\n    def scheduleCourse(self, courses):\n        courses.sort(key=lambda x: x[1])\n        dp = [0] * (len(courses) + 1)\n        for i in range(1, len(courses) + 1):\n            dp[i] = max(dp[i], dp[i - 1])\n            j = len(courses)\n            while j >= 1 and courses[j - 1][1] >= i:\n                dp[i] = max(dp[i], dp[j - 1] + courses[j - 1][0])\n                j -= 1\n        return dp[-1]"
+    }
+  ],
+  "reverse-nodes-in-k-group": [
+    {
+      "task_id": "reverse-nodes-in-k-group",
+      "completion": "class Solution(object):\n    def reverseKGroup(self, head, k):\n        dummy = jump = ListNode(0)\n        dummy.next = left = right = head\n        \n        while True:\n            count = 0\n            while right and count < k:    # use right to locate the range\n                right = right.next\n                count += 1\n            if count == k:    # if size k satisfied, reverse the inner linked list\n                pre, cur = right, left\n                for _ in range(k):\n                    cur.next, cur, pre = pre, cur.next, cur  # standard reversing\n                jump.next, jump, left = pre, left, right  # connect two k-groups\n            else:\n                return dummy.next"
+    }
+  ],
+  "repeated-substring-pattern": [
+    {
+      "task_id": "repeated-substring-pattern",
+      "completion": "class Solution(object):\n    def repeatedSubstringPattern(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        length = len(s)\n        for i in range(1, length//2 + 1):\n            if length % i!= 0:\n                continue\n            substr = s[:i]\n            if substr * (length // i) == s:\n                return True\n        return False"
+    }
+  ],
+  "unique-binary-search-trees": [
+    {
+      "task_id": "unique-binary-search-trees",
+      "completion": "class Solution(object):\n    def numTrees(self, n):\n        G = [0]*(n+1)\n        G[0] = 1\n        for i in range(1, n+1):\n            for j in range(i+1):\n                G[i] += G[j] * G[i-j-1]\n        return G[n]"
+    }
+  ],
+  "single-number-ii": [
+    {
+      "task_id": "single-number-ii",
+      "completion": "class Solution(object):\n    def singleNumber(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        # Using bitwise XOR operation\n        # The XOR of any number with itself is 0\n        # The XOR of a number with 0 is the number itself\n        # So, all the numbers that appear three times will cancel out\n        # The remaining number will be the one that appears only once\n        result = 0\n        for num in nums:\n            result ^= num\n        return result"
+    }
+  ],
+  "stickers-to-spell-word": [
+    {
+      "task_id": "stickers-to-spell-word",
+      "completion": "from collections import Counter\nclass Solution(object):\n    def minStickers(self, stickers, target):\n        count = Counter(target)\n        for sticker in stickers:\n            for c in sticker:\n                count[c] -= 1\n        if any(value > 0 for value in count.values()):\n            return -1\n        return len(stickers)"
+    }
+  ],
+  "strange-printer": [
+    {
+      "task_id": "strange-printer",
+      "completion": "class Solution(object):\n    def strangePrinter(self, s):\n        n = len(s)\n        dp = [[0]*n for _ in range(n)]\n        for length in range(1, n+1):\n            for i in range(n-length+1):\n                j = i + length - 1\n                if length == 1:\n                    dp[i][j] = 1\n                else:\n                    dp[i][j] = float('inf')\n                    for k in range(i, j):\n                        dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j])\n                    if s[i] == s[j]:\n                        dp[i][j] -= 1\n        return dp[0][n-1]"
+    }
+  ],
+  "sqrtx": [
+    {
+      "task_id": "sqrtx",
+      "completion": "class Solution(object):\n    def mySqrt(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: int\n        \"\"\"\n        if x < 2:\n            return x\n\n        start, end = 2, x\n        while start <= end:\n            mid = (start + end) // 2\n            if mid * mid == x:\n                return mid\n            elif mid * mid < x:\n                start = mid + 1\n            else:\n                end = mid - 1\n\n        return end"
+    }
+  ],
+  "roman-to-integer": [
+    {
+      "task_id": "roman-to-integer",
+      "completion": "class Solution(object):\n    def romanToInt(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        roman_dict = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\n        prev_num = 0\n        total = 0\n        for char in reversed(s):\n            if roman_dict[char] >= prev_num:\n                total += roman_dict[char]\n            else:\n                total -= roman_dict[char]\n            prev_num = roman_dict[char]\n        return total"
+    }
+  ],
+  "contains-duplicate": [
+    {
+      "task_id": "contains-duplicate",
+      "completion": "class Solution(object):\n    def containsDuplicate(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        return len(set(nums)) < len(nums)"
+    }
+  ],
+  "sliding-window-maximum": [
+    {
+      "task_id": "sliding-window-maximum",
+      "completion": "from typing import List\n\nclass Solution(object):\n    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:\n        if not nums or k == 0:\n            return []\n\n        # Deque (Double Ended QUEue) is a data structure that can be used to solve this problem\n        # It is more efficient than a regular list and provides fast insert/remove operations from both ends.\n        from collections import deque\n\n        # First, we initialize a deque that will hold the maximum values for each window\n        # The deque is initialized with the first k elements of nums\n        # The deque is also initialized with a max_len variable that will hold the maximum length of the window\n        max_len = deque(nums[:k])\n        max_vals = deque([max(max_len)])\n\n        # Then, we iterate over the remaining elements of nums\n        for num in nums[k:]:\n            # We compare the current number with the last element of max_len and add the maximum to the deque\n            # We also compare the current number with the last element of max_vals and update it if necessary\n            max_len.append(num)\n            max_len.popleft()\n            max_vals.append(max(max_len))\n            max_vals.popleft()\n\n        return list(max_vals)"
+    }
+  ],
+  "median-of-two-sorted-arrays": [
+    {
+      "task_id": "median-of-two-sorted-arrays",
+      "completion": "class Solution(object):\n    def findMedianSortedArrays(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: float\n        \"\"\"\n        nums = sorted(nums1 + nums2)\n        length = len(nums)\n        if length % 2 == 0:\n            return (nums[length//2] + nums[length//2 - 1]) / 2.0\n        else:\n            return nums[length//2]"
+    }
+  ],
+  "find-minimum-in-rotated-sorted-array": [
+    {
+      "task_id": "find-minimum-in-rotated-sorted-array",
+      "completion": "class Solution(object):\n    def findMin(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left, right = 0, len(nums) - 1\n        while left < right:\n            mid = (left + right) // 2\n            if nums[mid] > nums[right]:\n                left = mid + 1\n            else:\n                right = mid\n        return nums[left]"
+    }
+  ],
+  "pascals-triangle-ii": [
+    {
+      "task_id": "pascals-triangle-ii",
+      "completion": "class Solution(object):\n    def getRow(self, rowIndex):\n        \"\"\"\n        :type rowIndex: int\n        :rtype: List[int]\n        \"\"\"\n        row = [1] * (rowIndex + 1)\n        for i in range(1, rowIndex):\n            row[i] = row[i - 1] * (rowIndex - i) // i\n        return row"
+    }
+  ],
+  "path-sum-ii": [
+    {
+      "task_id": "path-sum-ii",
+      "completion": "class Solution(object):\n    def pathSum(self, root, targetSum):\n        if not root:\n            return []\n        else:\n            return self.dfs(root, targetSum, [])\n\n    def dfs(self, node, targetSum, path):\n        if not node:\n            return []\n        else:\n            path.append(node.val)\n            if not node.left and not node.right:\n                if sum(path) == targetSum:\n                    return [path]\n            else:\n                return self.dfs(node.left, targetSum, path) + self.dfs(node.right, targetSum, path)\n            path.pop()  # remove the last element from path before returning"
+    }
+  ],
+  "construct-the-rectangle": [
+    {
+      "task_id": "construct-the-rectangle",
+      "completion": "class Solution(object):\n    def constructRectangle(self, area):\n        import math\n        L = math.sqrt(area)\n        W = area/L\n        return [int(L), int(W)]"
+    }
+  ],
+  "word-ladder-ii": [
+    {
+      "task_id": "word-ladder-ii",
+      "completion": "from collections import deque, defaultdict\n\nclass Solution(object):\n    def findLadders(self, beginWord, endWord, wordList):\n        wordList = set(wordList)\n        if endWord not in wordList:\n            return []\n        \n        # Create a graph using adjacency list\n        graph = defaultdict(set)\n        for word in wordList:\n            for i in range(len(word)):\n                for c in 'abcdefghijklmnopqrstuvwxyz':\n                    new_word = word[:i] + c + word[i+1:]\n                    if new_word in wordList:\n                        graph[word].add(new_word)\n                        \n        # BFS from beginWord to endWord\n        queue = deque([(beginWord, [beginWord], 1)])\n        visited = set()\n        while queue:\n            word, path, length = queue.popleft()\n            if word == endWord:\n                return [p for p in path]\n            if word not in visited:\n                visited.add(word)\n                for nei in graph[word]:\n                    if nei not in visited:\n                        queue.append((nei, path + [nei], length + 1))\n                        \n        return []"
+    }
+  ],
+  "balanced-binary-tree": [
+    {
+      "task_id": "balanced-binary-tree",
+      "completion": "class Solution(object):\n    def isBalanced(self, root):\n        def dfs(node):\n            if not node: return 0\n            left, right = dfs(node.left), dfs(node.right)\n            if abs(left - right) > 1: return -1\n            return max(left, right) + 1\n\n        return dfs(root)!= -1"
+    }
+  ],
+  "power-of-two": [
+    {
+      "task_id": "power-of-two",
+      "completion": "class Solution(object):\n    def isPowerOfTwo(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        if n <= 0:\n            return False\n        while n % 2 == 0:\n            n /= 2\n        return n == 1"
+    }
+  ],
+  "subsets-ii": [
+    {
+      "task_id": "subsets-ii",
+      "completion": "from collections import defaultdict\n\nclass Solution(object):\n    def subsetsWithDup(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        n = len(nums)\n        if n == 0:\n            return [[]]\n\n        nums.sort()\n        subsets = []\n        used = [0] * n\n        for i in range(n):\n            if i > 0 and nums[i] == nums[i-1] and used[i-1] == 0:\n                continue\n            used[i] = 1\n            subsets.append([nums[i]])\n            for j in range(i+1, n):\n                if nums[j] == nums[i] and used[j] == 0:\n                    continue\n                used[j] = 1\n                subsets.append(subsets[-1] + [nums[j]])\n        return subsets"
+    }
+  ],
+  "largest-rectangle-in-histogram": [
+    {
+      "task_id": "largest-rectangle-in-histogram",
+      "completion": "class Solution(object):\n    def largestRectangleArea(self, heights):\n        \"\"\"\n        :type heights: List[int]\n        :rtype: int\n        \"\"\"\n        # add two auxiliary zero bars at both ends of the heights\n        heights = [0] + heights + [0]\n        stack = []\n        max_area = 0\n\n        for i in range(len(heights)):\n            # keep popping from stack until you meet a bar that is shorter than the current bar\n            while stack and heights[stack[-1]] >= heights[i]:\n                h = heights[stack.pop()]\n                max_area = max(max_area, h * (i - stack[-1] - 1])\n            # push the current bar to the stack\n            stack.append(i)\n\n        return max_area"
+    }
+  ],
+  "evaluate-reverse-polish-notation": [
+    {
+      "task_id": "evaluate-reverse-polish-notation",
+      "completion": "class Solution(object):\n    def evalRPN(self, tokens):\n        stack = []\n        for token in tokens:\n            if token in [\"+\", \"-\", \"*\", \"/\"]:\n                num2 = stack.pop()\n                num1 = stack.pop()\n                if token == \"+\":\n                    stack.append(num1 + num2)\n                elif token == \"-\":\n                    stack.append(num1 - num2)\n                elif token == \"*\":\n                    stack.append(num1 * num2)\n                else:\n                    stack.append(num1 / num2)\n            else:\n                stack.append(int(token))\n        return stack[0]"
+    }
+  ],
+  "perfect-rectangle": [
+    {
+      "task_id": "perfect-rectangle",
+      "completion": "class Solution(object):\n    def isRectangleCover(self, rectangles):\n        \"\"\"\n        :type rectangles: List[List[int]]\n        :rtype: bool\n        \"\"\"\n        # Initialize the total area and the area of the bounding box\n        total_area = 0\n        min_x = min_y = float('inf')\n        max_x = max_y = float('-inf')\n\n        # Calculate the total area and update the bounding box\n        for x1, y1, x2, y2 in rectangles:\n            total_area += (x2 - x1) * (y2 - y1)\n            min_x = min(min_x, x1)\n            min_y = min(min_y, y1)\n            max_x = max(max_x, x2)\n            max_y = max(max_y, y2)\n\n        # If the total area is not a rectangle, return False\n        if total_area!= (max_x - min_x) * (max_y - min_y):\n            return False\n\n        # If the total area is a rectangle, check if it is equal to the bounding box area\n        if total_area == (max_x - min_x) * (max_y - min_y):\n            return True\n\n        return False"
+    }
+  ],
+  "excel-sheet-column-title": [
+    {
+      "task_id": "excel-sheet-column-title",
+      "completion": "class Solution(object):\n    def convertToTitle(self, columnNumber):\n        \"\"\"\n        :type columnNumber: int\n        :rtype: str\n        \"\"\"\n        # Define the empty string for the result\n        result = \"\"\n\n        # Define the base as 26\n        base = 26\n\n        # Use a while loop to convert the number to the corresponding column title\n        while columnNumber > 0:\n            # Use the modulus operator to get the remainder of the division by the base\n            remainder = columnNumber % base\n\n            # If the remainder is greater than 9, convert it to its corresponding letter using the built-in chr() function\n            if remainder > 9:\n                result = chr(remainder - 10 + ord('A')) + result\n            else:\n                result = str(remainder) + result\n\n            # Update the columnNumber for the next iteration\n            columnNumber = columnNumber // base\n\n        # Return the result\n        return result"
+    }
+  ],
+  "maximum-subarray": [
+    {
+      "task_id": "maximum-subarray",
+      "completion": "class Solution(object):\n    def maxSubArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        max_so_far = nums[0]\n        curr_max = nums[0]\n        \n        for i in range(1, len(nums)):\n            curr_max = max(nums[i], curr_max + nums[i])\n            max_so_far = max(max_so_far, curr_max)\n            \n        return max_so_far"
+    }
+  ],
+  "sliding-puzzle": [
+    {
+      "task_id": "sliding-puzzle",
+      "completion": "from collections import deque\n\nclass Solution(object):\n    def slidingPuzzle(self, board):\n        \"\"\"\n        :type board: List[List[int]]\n        :rtype: int\n        \"\"\"\n        # Define the possible moves\n        moves = [(1, 0, 0, 1), (0, 1, 0, 1), (0, 0, 1, 1), (1, 0, 0, -1), (0, 1, 0, -1), (0, 0, 1, -1)]\n\n        # Convert the board into a string for easy comparison\n        board_str = ''.join(str(x) for row in board for x in row)\n\n        # Define the starting state\n        start = '123450'\n\n        # Use a BFS to find the minimum number of moves\n        queue = deque([(board_str, 0)])\n        visited = set()\n        while queue:\n            state, steps = queue.popleft()\n            if state == start:\n                return steps\n\n            # Generate the next states by moving the empty square in all possible directions\n            for dx, dy, dz, dw in moves:\n                nj, ni, nk = dx + dw, dy + dw, dz + dw\n                if 0 <= nj < 3 and 0 <= ni < 2 and 0 <= nk < 3:\n                    swap = (nj, ni, nk)\n                    # Swap the empty square and the adjacent number\n                    next_state = list(state)\n                    next_state[ni * 3 + nj], next_state[nk * 3 + ni] = next_state[nk * 3 + ni], next_state[ni * 3 + nj]\n                    next_state = ''.join(next_state)\n\n                    # Add the new state to the queue if it has not been visited\n                    if next_state not in visited:\n                        visited.add(next_state)\n                        queue.append((next_state, steps + 1))\n\n        # If no solution is found, return -1\n        return -1"
+    }
+  ],
+  "isomorphic-strings": [
+    {
+      "task_id": "isomorphic-strings",
+      "completion": "class Solution(object):\n    def isIsomorphic(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        dic_s = {}\n        dic_t = {}\n\n        for i in range(len(s)):\n            if s[i] not in dic_s:\n                dic_s[s[i]] = t[i]\n            if t[i] not in dic_t:\n                dic_t[t[i]] = s[i]\n            if dic_s[s[i]]!= t[i] or dic_t[t[i]]!= s[i]:\n                return False\n\n        return True"
+    }
+  ],
+  "search-in-rotated-sorted-array-ii": [
+    {
+      "task_id": "search-in-rotated-sorted-array-ii",
+      "completion": "class Solution(object):\n    def search(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: bool\n        \"\"\"\n        left, right = 0, len(nums) - 1\n        while left <= right:\n            mid = (left + right) // 2\n            if nums[mid] == target:\n                return True\n            if nums[left] < nums[mid]:\n                if nums[left] <= target < nums[mid]:\n                    right = mid - 1\n                else:\n                    left = mid + 1\n            elif nums[left] > nums[mid]:\n                if nums[mid] < target <= nums[right]:\n                    left = mid + 1\n                else:\n                    right = mid - 1\n            else:\n                left += 1\n        return False"
+    }
+  ],
+  "unique-paths-ii": [
+    {
+      "task_id": "unique-paths-ii",
+      "completion": "class Solution(object):\n    def uniquePathsWithObstacles(self, obstacleGrid):\n        \"\"\"\n        :type obstacleGrid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        m, n = len(obstacleGrid), len(obstacleGrid[0])\n        dp = [[0]*n for _ in range(m)]\n        \n        # Initialize the first row and first column\n        for i in range(m):\n            if obstacleGrid[i][0] == 0:\n                dp[i][0] = 1\n        for j in range(n):\n            if obstacleGrid[0][j] == 0:\n                dp[0][j] = 1\n        \n        # Fill the rest of the dp table\n        for i in range(1, m):\n            for j in range(1, n):\n                if obstacleGrid[i][j] == 0:\n                    dp[i][j] = dp[i-1][j] + dp[i][j-1]\n        \n        return dp[m-1][n-1]"
+    }
+  ],
+  "decode-ways-ii": [
+    {
+      "task_id": "decode-ways-ii",
+      "completion": "class Solution(object):\n    def numDecodings(self, s):\n        MOD = 10**9 + 7\n        # Array to store the number of ways to decode a string of length i\n        dp = [0] * (len(s) + 1)\n        # Base cases\n        dp[0] = 1\n        dp[1] = 0 if s[0] == '*' else 1\n\n        for i in range(2, len(s) + 1):\n            # If the current character is '*'\n            if s[i - 1] == '*':\n                # The number of ways to decode the current string is the sum of\n                # the number of ways to decode the previous string, and the number of\n                # ways to decode the previous string with the current character as '1'\n                dp[i] = (dp[i - 1] + dp[i - 2] * 9) % MOD\n            else:\n                # If the current character is not '*' then it must be a digit\n                # If the previous character is '*' then the number of ways to decode\n                # the current string is the number of ways to decode the previous string\n                # If the previous character is a digit then the number of ways to decode\n                # the current string is the sum of the number of ways to decode the\n                # previous string and the number of ways to decode the previous string\n                # with the current character as '0'\n                dp[i] = (dp[i - 1] + dp[i - 2] * (s[i - 1] == '0' or s[i - 1] == '*')) % MOD\n\n        # The number of ways to decode the entire string is the number of ways to decode\n        # the last string\n        return dp[-1]"
+    }
+  ],
+  "3sum-closest": [
+    {
+      "task_id": "3sum-closest",
+      "completion": "class Solution(object):\n    def threeSumClosest(self, nums, target):\n        nums.sort()\n        diff = float('inf')\n        for i in range(len(nums) - 2):\n            lo, hi = i + 1, len(nums) - 1\n            while lo < hi:\n                sum = nums[i] + nums[lo] + nums[hi]\n                if abs(target - sum) < diff:\n                    diff = abs(target - sum)\n                    ans = sum\n                if sum < target:\n                    lo += 1\n                else:\n                    hi -= 1\n            if diff == 0:\n                break\n        return ans"
+    }
+  ],
+  "maximum-depth-of-binary-tree": [
+    {
+      "task_id": "maximum-depth-of-binary-tree",
+      "completion": "class Solution(object):\n    def maxDepth(self, root):\n        if not root:\n            return 0\n        else:\n            left_depth = self.maxDepth(root.left)\n            right_depth = self.maxDepth(root.right)\n            return max(left_depth, right_depth) + 1"
+    }
+  ],
+  "intersection-of-two-arrays-ii": [
+    {
+      "task_id": "intersection-of-two-arrays-ii",
+      "completion": "from collections import Counter\n\nclass Solution(object):\n    def intersect(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        counter1 = Counter(nums1)\n        counter2 = Counter(nums2)\n        \n        intersection = []\n        for num in counter1:\n            if num in counter2:\n                intersection.extend([num]*min(counter1[num], counter2[num]))\n        return intersection"
+    }
+  ],
+  "minimum-absolute-difference-in-bst": [
+    {
+      "task_id": "minimum-absolute-difference-in-bst",
+      "completion": "class Solution(object):\n    def getMinimumDifference(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        self.prev = -float('inf')\n        self.min_diff = float('inf')\n\n        def inorder(root):\n            if root:\n                inorder(root.left)\n                self.min_diff = min(self.min_diff, root.val - self.prev)\n                self.prev = root.val\n                inorder(root.right)\n\n        inorder(root)\n        return self.min_diff"
+    }
+  ],
+  "find-mode-in-binary-search-tree": [
+    {
+      "task_id": "find-mode-in-binary-search-tree",
+      "completion": "class Solution(object):\n    def findMode(self, root):\n        if not root: return []\n        counts = {}\n        stack = [root]\n        while stack:\n            node = stack.pop()\n            if node.val in counts:\n                counts[node.val] += 1\n            else:\n                counts[node.val] = 1\n            if node.right: stack.append(node.right)\n            if node.left: stack.append(node.left)\n        max_count = max(counts.values())\n        modes = [k for k, v in counts.items() if v == max_count]\n        return modes"
+    }
+  ],
+  "find-the-index-of-the-first-occurrence-in-a-string": [
+    {
+      "task_id": "find-the-index-of-the-first-occurrence-in-a-string",
+      "completion": "class Solution(object):\n    def strStr(self, haystack, needle):\n        \"\"\"\n        :type haystack: str\n        :type needle: str\n        :rtype: int\n        \"\"\"\n        return haystack.find(needle)"
+    }
+  ],
+  "strong-password-checker": [
+    {
+      "task_id": "strong-password-checker",
+      "completion": "class Solution(object):\n    def strongPasswordChecker(self, password):\n        \"\"\"\n        :type password: str\n        :rtype: int\n        \"\"\"\n        steps = 0\n        if len(password) < 6:\n            steps += 6 - len(password)\n        if len(password) > 20:\n            steps += len(password) - 20\n        if not any(char.islower() for char in password):\n            steps += 1\n        if not any(char.isupper() for char in password):\n            steps += 1\n        if not any(char.isdigit() for char in password):\n            steps += 1\n        if any(password[i] == password[i+1] == password[i+2] for i in range(len(password) - 2)):\n            steps += 1\n        return steps"
+    }
+  ],
+  "factorial-trailing-zeroes": [
+    {
+      "task_id": "factorial-trailing-zeroes",
+      "completion": "class Solution(object):\n    def trailingZeroes(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        count = 0\n        i = 5\n        while n // i >= 1:\n            count += n // i\n            i *= 5\n        return count"
+    }
+  ],
+  "zigzag-conversion": [
+    {
+      "task_id": "zigzag-conversion",
+      "completion": "class Solution(object):\n    def convert(self, s, numRows):\n        \"\"\"\n        :type s: str\n        :type numRows: int\n        :rtype: str\n        \"\"\"\n        if numRows == 1:\n            return s\n\n        # Initialize the result\n        result = ''\n\n        # Get the length of the string\n        length = len(s)\n\n        # Loop over the string\n        for row in range(numRows):\n            # Calculate the start and end index of each row\n            start = row\n            end = length - 1 - row\n\n            # If the row is even\n            if row % 2 == 0:\n                while start <= end:\n                    result += s[start]\n                    start += 1\n            # If the row is odd\n            else:\n                while end >= start:\n                    result += s[end]\n                    end -= 1\n\n        return result"
+    }
+  ],
+  "trapping-rain-water": [
+    {
+      "task_id": "trapping-rain-water",
+      "completion": "class Solution(object):\n    def trap(self, height):\n        \"\"\"\n        :type height: List[int]\n        :rtype: int\n        \"\"\"\n        if not height:\n            return 0\n\n        left, right = 0, len(height) - 1\n        max_left, max_right = 0, 0\n        ans = 0\n\n        while left < right:\n            if height[left] < height[right]:\n                if height[left] > max_left:\n                    max_left = height[left]\n                else:\n                    ans += max_left - height[left]\n                    left += 1\n            else:\n                if height[right] > max_right:\n                    max_right = height[right]\n                else:\n                    ans += max_right - height[right]\n                    right -= 1\n\n        return ans"
+    }
+  ],
+  "find-all-numbers-disappeared-in-an-array": [
+    {
+      "task_id": "find-all-numbers-disappeared-in-an-array",
+      "completion": "class Solution(object):\n    def findDisappearedNumbers(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        n = len(nums)\n        nums = set(nums)\n        return [i for i in range(1, n+1) if i not in nums]"
+    }
+  ],
+  "count-of-smaller-numbers-after-self": [
+    {
+      "task_id": "count-of-smaller-numbers-after-self",
+      "completion": "class Solution(object):\n    def countSmaller(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        n = len(nums)\n        answer = [0] * n\n        stack = []\n\n        for i in range(n - 1, -1, -1):\n            while stack and nums[i] < stack[-1]:\n                stack.pop()\n            if stack:\n                answer[i] = len(stack)\n            stack.append(nums[i])\n\n        return answer"
+    }
+  ],
+  "set-intersection-size-at-least-two": [
+    {
+      "task_id": "set-intersection-size-at-least-two",
+      "completion": "class Solution(object):\n    def intersectionSizeTwo(self, intervals):\n        intervals.sort(key = lambda x: (x[1], -x[0]))\n        stack = []\n        for interval in intervals:\n            if stack and interval[0] <= stack[-1][1]:\n                stack[-1][1] = max(stack[-1][1], interval[1])\n            else:\n                stack.append(interval)\n        return len(stack)"
+    }
+  ],
+  "symmetric-tree": [
+    {
+      "task_id": "symmetric-tree",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def isSymmetric(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: bool\n        \"\"\"\n        if not root:\n            return True\n        return self.isMirror(root.left, root.right)\n\n    def isMirror(self, left, right):\n        if not left and not right:\n            return True\n        if not left or not right:\n            return False\n        return (left.val == right.val) and self.isMirror(left.left, right.right) and self.isMirror(left.right, right.left)"
+    }
+  ],
+  "number-of-atoms": [
+    {
+      "task_id": "number-of-atoms",
+      "completion": "class Solution(object):\n    def countOfAtoms(self, formula):\n        i, n, stack, dic = 0, len(formula), [], {}\n        while i < n:\n            if formula[i] == '(':\n                stack.append(i)\n            elif formula[i] == ')':\n                start = stack.pop()\n                j = i + 1\n                while j < n and formula[j].isdigit():\n                    j += 1\n                num = int(formula[start+1:j]) if j-start-1 > 0 else 1\n                for k in range(start+1, j):\n                    if formula[k].islower():\n                        dic[formula[k]] = dic.get(formula[k], 0) + num\n            else:\n                j = i + 1\n                while j < n and formula[j].isdigit():\n                    j += 1\n                num = int(formula[i+1:j]) if j-i-1 > 0 else 1\n                dic[formula[i]] = dic.get(formula[i], 0) + num\n            i = j\n        res = []\n        for k in sorted(dic.keys()):\n            if dic[k] > 1:\n                res.append(k + str(dic[k]))\n            else:\n                res.append(k)\n        return ''.join(res)"
+    }
+  ],
+  "binary-tree-preorder-traversal": [
+    {
+      "task_id": "binary-tree-preorder-traversal",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def preorderTraversal(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        def dfs(node):\n            if node:\n                result.append(node.val)\n                dfs(node.left)\n                dfs(node.right)\n        dfs(root)\n        return result"
+    }
+  ],
+  "power-of-four": [
+    {
+      "task_id": "power-of-four",
+      "completion": "class Solution(object):\n    def isPowerOfFour(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        if n < 1:\n            return False\n        while n % 4 == 0:\n            n /= 4\n        return n == 1"
+    }
+  ],
+  "invert-binary-tree": [
+    {
+      "task_id": "invert-binary-tree",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def invertTree(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: TreeNode\n        \"\"\"\n        if root:\n            root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)\n        return root"
+    }
+  ],
+  "generate-parentheses": [
+    {
+      "task_id": "generate-parentheses",
+      "completion": "class Solution(object):\n    def generateParenthesis(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        def generate(left, right, s):\n            if left == 0 and right == 0:\n                res.append(s)\n            if left > 0:\n                generate(left-1, right, s+'(')\n            if right > left:\n                generate(left, right-1, s+')')\n\n        res = []\n        generate(n, n, '')\n        return res"
+    }
+  ],
+  "patching-array": [
+    {
+      "task_id": "patching-array",
+      "completion": "class Solution(object):\n    def minPatches(self, nums, n):\n        patch, i, max_num = 0, 0, 0\n        while max_num < n:\n            if i < len(nums) and nums[i] <= max_num:\n                max_num += nums[i]\n                i += 1\n            else:\n                max_num += max_num + 1\n                patch += 1\n        return patch"
+    }
+  ],
+  "longest-valid-parentheses": [
+    {
+      "task_id": "longest-valid-parentheses",
+      "completion": "class Solution(object):\n    def longestValidParentheses(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        stack = []\n        max_length = 0\n        for char in s:\n            if char == '(':\n                stack.append(char)\n            else:\n                if stack:\n                    stack.pop()\n                    length = len(stack) + 2\n                    max_length = max(max_length, length)\n                else:\n                    max_length = max(max_length, 2)\n        return max_length"
+    }
+  ],
+  "fraction-to-recurring-decimal": [
+    {
+      "task_id": "fraction-to-recurring-decimal",
+      "completion": "class Solution(object):\n    def fractionToDecimal(self, numerator, denominator):\n        if numerator == 0:\n            return \"0\"\n        if denominator == 1:\n            return str(numerator)\n\n        negative = False\n        if (numerator < 0 and denominator > 0) or (numerator > 0 and denominator < 0):\n            negative = True\n\n        numerator = abs(numerator)\n        denominator = abs(denominator)\n\n        integer_part = numerator // denominator\n        fraction_part = numerator % denominator\n\n        if fraction_part == 0:\n            return str(integer_part)\n\n        result = \"\"\n        if integer_part > 0:\n            result += str(integer_part) + \".\"\n\n        while fraction_part!= 0:\n            fraction_part *= 10\n            digit = fraction_part // denominator\n            result += str(digit)\n            fraction_part %= denominator\n\n        if negative:\n            result = \"-\" + result\n\n        return result"
+    }
+  ],
+  "sort-list": [
+    {
+      "task_id": "sort-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def sortList(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        if not head or not head.next:\n            return head\n\n        # Step 1. Divide the list into two halves\n        prev, slow, fast = None, head, head\n        while fast and fast.next:\n            prev = slow\n            slow = slow.next\n            fast = fast.next.next\n\n        prev.next = None\n\n        # Step 2. Sort each half\n        n1 = self.sortList(head)\n        n2 = self.sortList(slow)\n\n        # Step 3. Merge the two sorted halves\n        return self.merge(n1, n2)\n\n    def merge(self, n1, n2):\n        dummy = ListNode(0)\n        curr = dummy\n        while n1 and n2:\n            if n1.val < n2.val:\n                curr.next = n1\n                n1 = n1.next\n            else:\n                curr.next = n2\n                n2 = n2.next\n            curr = curr.next\n        if n1:\n            curr.next = n1\n        if n2:\n            curr.next = n2\n        return dummy.next"
+    }
+  ],
+  "russian-doll-envelopes": [
+    {
+      "task_id": "russian-doll-envelopes",
+      "completion": "class Solution(object):\n    def maxEnvelopes(self, envelopes):\n        \"\"\"\n        :type envelopes: List[List[int]]\n        :rtype: int\n        \"\"\"\n        # Sort the envelopes based on width and height.\n        envelopes.sort(key=lambda x: (x[0], x[1]))\n\n        # Initialize a list to keep track of the maximum number of envelopes that can be put inside each other.\n        dp = [1] * len(envelopes)\n\n        # Iterate through the envelopes.\n        for i in range(len(envelopes)):\n            # For each envelope, iterate through the previous envelopes.\n            for j in range(i):\n                # If the current envelope can be put inside the previous envelope, update the maximum number of envelopes that can be put inside each other.\n                if envelopes[i][0] > envelopes[j][0] and envelopes[i][1] > envelopes[j][1]:\n                    dp[i] = max(dp[i], dp[j] + 1)\n\n        # Return the maximum number of envelopes that can be put inside each other.\n        return max(dp)"
+    }
+  ],
+  "set-matrix-zeroes": [
+    {
+      "task_id": "set-matrix-zeroes",
+      "completion": "class Solution(object):\n    def setZeroes(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: None Do not return anything, modify matrix in-place instead.\n        \"\"\"\n        m, n = len(matrix), len(matrix[0])\n        row_zero = [0] * m\n        col_zero = [0] * n\n\n        for i in range(m):\n            for j in range(n):\n                if matrix[i][j] == 0:\n                    row_zero[i] = 1\n                    col_zero[j] = 1\n\n        for i in range(m):\n            for j in range(n):\n                if row_zero[i] == 1 or col_zero[j] == 1:\n                    matrix[i][j] = 0"
+    }
+  ],
+  "remove-nth-node-from-end-of-list": [
+    {
+      "task_id": "remove-nth-node-from-end-of-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def removeNthFromEnd(self, head, n):\n        dummy = ListNode(0)\n        dummy.next = head\n        first = dummy\n        second = dummy\n        for _ in range(n+1):\n            first = first.next\n        while first:\n            first = first.next\n            second = second.next\n        second.next = second.next.next\n        return dummy.next"
+    }
+  ],
+  "intersection-of-two-arrays": [
+    {
+      "task_id": "intersection-of-two-arrays",
+      "completion": "class Solution(object):\n    def intersection(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        set1 = set(nums1)\n        set2 = set(nums2)\n        return list(set1 & set2)"
+    }
+  ],
+  "super-washing-machines": [
+    {
+      "task_id": "super-washing-machines",
+      "completion": "class Solution(object):\n    def findMinMoves(self, machines):\n        n = len(machines)\n        if n == 0:\n            return 0\n        total = sum(machines)\n        if total % n!= 0:\n            return -1\n        target = total / n\n        right, left = [0]*n, [0]*n\n        right[n-1] = machines[n-1] - target\n        for i in range(n-2, -1, -1):\n            right[i] = right[i+1] + machines[i] - target\n        left[0] = machines[0] - target\n        for i in range(1, n):\n            left[i] = left[i-1] + machines[i] - target\n        return max(right[0], left[n-1])"
+    }
+  ],
+  "kth-smallest-number-in-multiplication-table": [
+    {
+      "task_id": "kth-smallest-number-in-multiplication-table",
+      "completion": "import heapq\n\nclass Solution(object):\n    def findKthNumber(self, m, n, k):\n        pq = []\n        for i in range(1, m+1):\n            for j in range(1, n+1):\n                heapq.heappush(pq, (i*j, i, j))\n        while len(pq) > k:\n            heapq.heappop(pq)\n        return pq[0][0]"
+    }
+  ],
+  "convert-sorted-list-to-binary-search-tree": [
+    {
+      "task_id": "convert-sorted-list-to-binary-search-tree",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\n# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def sortedListToBST(self, head):\n        \"\"\"\n        :type head: Optional[ListNode]\n        :rtype: Optional[TreeNode]\n        \"\"\"\n        if not head:\n            return None\n        # find the length of the linked list\n        length = 0\n        temp = head\n        while temp:\n            temp = temp.next\n            length += 1\n        # recursively convert the linked list to BST\n        return self.convert(head, length)\n\n    def convert(self, head, n):\n        if n <= 0:\n            return None\n        # recusively construct the left subtree\n        left = self.convert(head, n // 2)\n        # create the root node\n        root = TreeNode(head.val)\n        root.left = left\n        # move the head pointer to the middle of the linked list\n        head = head.next\n        # recursively construct the right subtree\n        root.right = self.convert(head, n - n // 2 - 1)\n        return root"
+    }
+  ],
+  "merge-two-sorted-lists": [
+    {
+      "task_id": "merge-two-sorted-lists",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def mergeTwoLists(self, list1, list2):\n        \"\"\"\n        :type list1: Optional[ListNode]\n        :type list2: Optional[ListNode]\n        :rtype: Optional[ListNode]\n        \"\"\"\n        # Create a dummy node as the head of the merged list\n        dummy = ListNode(0)\n        current = dummy\n\n        # While both lists exist\n        while list1 and list2:\n            # Compare the values of the current nodes in the two lists\n            if list1.val < list2.val:\n                current.next = list1\n                list1 = list1.next\n            else:\n                current.next = list2\n                list2 = list2.next\n            # Move the current node forward\n            current = current.next\n\n        # If there are still nodes in list1\n        if list1:\n            current.next = list1\n        # If there are still nodes in list2\n        elif list2:\n            current.next = list2\n\n        # Return the next node of the dummy node, which is the head of the merged list\n        return dummy.next"
+    }
+  ],
+  "maximal-rectangle": [
+    {
+      "task_id": "maximal-rectangle",
+      "completion": "class Solution(object):\n    def maximalRectangle(self, matrix):\n        \"\"\"\n        :type matrix: List[List[str]]\n        :rtype: int\n        \"\"\"\n        if not matrix or not matrix[0]: return 0\n        \n        m, n = len(matrix), len(matrix[0])\n        dp = [[0]*n for _ in range(m)]\n        max_area = 0\n        \n        for i in range(m):\n            for j in range(n):\n                if matrix[i][j] == '1':\n                    # update dp[i][j]\n                    dp[i][j] = 1 + (dp[i-1][j] if i > 0 else 0)\n                    max_area = max(max_area, dp[i][j])\n        \n        for i in range(m):\n            for j in range(n):\n                if matrix[i][j] == '1':\n                    # update dp[i][j]\n                    dp[i][j] = min(dp[i][j-1], dp[i-1][j]) + 1\n                    max_area = max(max_area, dp[i][j])\n        \n        return max_area"
+    }
+  ],
+  "subsets": [
+    {
+      "task_id": "subsets",
+      "completion": "class Solution(object):\n    def subsets(self, nums):\n        def dfs(nums, index, path, res):\n            res.append(path)\n            for i in range(index, len(nums)):\n                dfs(nums, i + 1, path + [nums[i]], res)\n        res = []\n        nums.sort()\n        dfs(nums, 0, [], res)\n        return res"
+    }
+  ],
+  "find-minimum-in-rotated-sorted-array-ii": [
+    {
+      "task_id": "find-minimum-in-rotated-sorted-array-ii",
+      "completion": "class Solution(object):\n    def findMin(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        n = len(nums)\n        for i in range(n):\n            if nums[i] > nums[(i + 1) % n]:\n                return nums[(i + 1) % n]\n        return nums[0]"
+    }
+  ],
+  "valid-number": [
+    {
+      "task_id": "valid-number",
+      "completion": "import re\n\nclass Solution(object):\n    def isNumber(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        regex = re.compile(r'^[+-]?(\\.\\d+|\\d+\\.\\d*|\\d+)([eE][+-]?\\d+)?$')\n        return bool(regex.match(s))"
+    }
+  ],
+  "integer-to-roman": [
+    {
+      "task_id": "integer-to-roman",
+      "completion": "class Solution(object):\n    def intToRoman(self, num):\n        lookup = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]\n        roman_numeral = ''\n        for value, symbol in lookup:\n            while num >= value:\n                roman_numeral += symbol\n                num -= value\n        return roman_numeral"
+    }
+  ],
+  "find-the-difference": [
+    {
+      "task_id": "find-the-difference",
+      "completion": "class Solution(object):\n    def findTheDifference(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: str\n        \"\"\"\n        # count the frequency of each character in s\n        s_count = collections.Counter(s)\n        # count the frequency of each character in t\n        t_count = collections.Counter(t)\n        \n        # iterate over each character in t\n        for char in t:\n            # if the count of the character in t is greater than in s\n            if t_count[char] > s_count[char]:\n                # return the character\n                return char"
+    }
+  ],
+  "sudoku-solver": [
+    {
+      "task_id": "sudoku-solver",
+      "completion": "class Solution(object):\n    def solveSudoku(self, board):\n        def is_valid(board, row, col, num):\n            # Check if 'num' is not already placed in current row\n            for x in range(9):\n                if board[row][x] == str(num):\n                    return False\n            # Check if 'num' is not already placed in current column\n            for x in range(9):\n                if board[x][col] == str(num):\n                    return False\n            # Check if 'num' is not already placed in current 3x3 box\n            start_row, start_col = row - row % 3, col - col % 3\n            for i in range(3):\n                for j in range(3):\n                    if board[i + start_row][j + start_col] == str(num):\n                        return False\n            return True\n\n        def solve(board, row, col):\n            if row == 9 - 1 and col == 9:\n                return True\n            if col == 9:\n                row += 1\n                col = 0\n            if board[row][col]!= '.':\n                return solve(board, row, col + 1)\n            for num in range(1, 10):\n                if is_valid(board, row, col, num):\n                    board[row][col] = str(num)\n                    if solve(board, row, col + 1):\n                        return True\n            board[row][col] = '.'\n            return False\n\n        solve(board, 0, 0)"
+    }
+  ],
+  "recover-binary-search-tree": [
+    {
+      "task_id": "recover-binary-search-tree",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def recoverTree(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: None Do not return anything, modify root in-place instead.\n        \"\"\"\n        self.prev = None\n        self.x = None\n        self.y = None\n\n        def inorder(node):\n            if node:\n                inorder(node.left)\n                if self.prev and node.val < self.prev.val:\n                    if self.x is None:\n                        self.x = self.prev\n                    self.y = node\n                self.prev = node\n                inorder(node.right)\n        \n        inorder(root)\n\n        if self.x and self.y:\n            self.x.val, self.y.val = self.y.val, self.x.val"
+    }
+  ],
+  "palindrome-linked-list": [
+    {
+      "task_id": "palindrome-linked-list",
+      "completion": "class Solution(object):\n    def isPalindrome(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: bool\n        \"\"\"\n        # Step 1. Find the middle of the list\n        slow = head\n        fast = head\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n\n        # Step 2. Reverse the second half of the list\n        prev = None\n        while slow:\n            next_node = slow.next\n            slow.next = prev\n            prev = slow\n            slow = next_node\n\n        # Step 3. Compare the first half with the reversed second half\n        while head and prev:\n            if head.val!= prev.val:\n                return False\n            head = head.next\n            prev = prev.next\n\n        return True"
+    }
+  ],
+  "valid-perfect-square": [
+    {
+      "task_id": "valid-perfect-square",
+      "completion": "class Solution(object):\n    def isPerfectSquare(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        if num < 2:\n            return True\n        \n        x = num // 2\n        while x * x!= num:\n            x = (x + (num // x)) // 2\n            if x * x < num:\n                return False\n        return True"
+    }
+  ],
+  "counting-bits": [
+    {
+      "task_id": "counting-bits",
+      "completion": "class Solution(object):\n    def countBits(self, n):\n        ans = [0]*(n+1)\n        for i in range(1, n+1):\n            ans[i] = ans[i>>1] + (i&1)\n        return ans"
+    }
+  ],
+  "remove-linked-list-elements": [
+    {
+      "task_id": "remove-linked-list-elements",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def removeElements(self, head, val):\n        \"\"\"\n        :type head: ListNode\n        :type val: int\n        :rtype: ListNode\n        \"\"\"\n        # Create a dummy node and link it to the head node\n        dummy = ListNode(0)\n        dummy.next = head\n\n        # Set the current node to dummy node\n        curr = dummy\n\n        # Iterate through the linked list\n        while curr and curr.next:\n            # If the value of the next node is equal to val\n            if curr.next.val == val:\n                # Skip the next node\n                curr.next = curr.next.next\n            else:\n                # Move the curr node to the next node\n                curr = curr.next\n\n        # Return the next node of dummy node, which is the new head\n        return dummy.next"
+    }
+  ],
+  "scramble-string": [
+    {
+      "task_id": "scramble-string",
+      "completion": "class Solution(object):\n    def isScramble(self, s1, s2):\n        \"\"\"\n        :type s1: str\n        :type s2: str\n        :rtype: bool\n        \"\"\"\n        if s1 == s2:\n            return True\n        if sorted(s1)!= sorted(s2):\n            return False\n        for i in range(1, len(s1)):\n            if (self.isScramble(s1[:i], s2[:i]) and self.isScramble(s1[i:], s2[i:])) or (self.isScramble(s1[:i], s2[-i:]) and self.isScramble(s1[i:], s2[:-i])):\n                return True\n        return False"
+    }
+  ],
+  "simplify-path": [
+    {
+      "task_id": "simplify-path",
+      "completion": "class Solution(object):\n    def simplifyPath(self, path):\n        \"\"\"\n        :type path: str\n        :rtype: str\n        \"\"\"\n        stack = []\n        components = path.split(\"/\")\n        \n        for component in components:\n            if component == \"..\" and stack:\n                stack.pop()\n            elif component!= \"\" and component!= \".\" and component!= \"..\":\n                stack.append(component)\n        \n        return \"/\" + \"/\".join(stack)"
+    }
+  ],
+  "word-search-ii": [
+    {
+      "task_id": "word-search-ii",
+      "completion": "class Solution(object):\n    def findWords(self, board, words):\n        def search(i, j, word):\n            if not board[i][j] in word:\n                return False\n            if len(word) == 1:\n                return True\n            board[i][j] = \"#\"\n            for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]:\n                if 0 <= x < m and 0 <= y < n and search(x, y, word[1:]):\n                    return True\n            board[i][j] = word[0]\n            return False\n\n        m, n = len(board), len(board[0])\n        self.result = []\n        for word in words:\n            for i in range(m):\n                for j in range(n):\n                    if search(i, j, word):\n                        self.result.append(word)\n                        break\n                else:\n                    continue\n                break\n        return self.result"
+    }
+  ],
+  "valid-anagram": [
+    {
+      "task_id": "valid-anagram",
+      "completion": "class Solution(object):\n    def isAnagram(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        if len(s)!= len(t):\n            return False\n        else:\n            return sorted(s) == sorted(t)"
+    }
+  ],
+  "valid-sudoku": [
+    {
+      "task_id": "valid-sudoku",
+      "completion": "class Solution(object):\n    def isValidSudoku(self, board):\n        \"\"\"\n        :type board: List[List[str]]\n        :rtype: bool\n        \"\"\"\n        row = [set() for _ in range(9)]\n        col = [set() for _ in range(9)]\n        box = [set() for _ in range(9)]\n        \n        for i in range(9):\n            for j in range(9):\n                if board[i][j] == '.':\n                    continue\n                num = int(board[i][j])\n                if num in row[i] or num in col[j] or num in box[int((i/3)*3 + j/3)]:\n                    return False\n                row[i].add(num)\n                col[j].add(num)\n                box[int((i/3)*3 + j/3)].add(num)\n        return True"
+    }
+  ],
+  "fizz-buzz": [
+    {
+      "task_id": "fizz-buzz",
+      "completion": "class Solution(object):\n    def fizzBuzz(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        result = []\n        for i in range(1, n+1):\n            if i % 3 == 0 and i % 5 == 0:\n                result.append(\"FizzBuzz\")\n            elif i % 3 == 0:\n                result.append(\"Fizz\")\n            elif i % 5 == 0:\n                result.append(\"Buzz\")\n            else:\n                result.append(str(i))\n        return result"
+    }
+  ],
+  "reverse-words-in-a-string": [
+    {
+      "task_id": "reverse-words-in-a-string",
+      "completion": "class Solution(object):\n    def reverseWords(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        words = s.split()\n        words = words[::-1]\n        return''.join(words)"
+    }
+  ],
+  "excel-sheet-column-number": [
+    {
+      "task_id": "excel-sheet-column-number",
+      "completion": "class Solution(object):\n    def titleToNumber(self, columnTitle):\n        \"\"\"\n        :type columnTitle: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in range(len(columnTitle)):\n            # Get the number of the current character\n            num = ord(columnTitle[i]) - ord('A') + 1\n            # Multiply the number by 26 to the power of its place\n            result += num * (26 ** i)\n        return result"
+    }
+  ],
+  "candy": [
+    {
+      "task_id": "candy",
+      "completion": "class Solution(object):\n    def candy(self, ratings):\n        \"\"\"\n        :type ratings: List[int]\n        :rtype: int\n        \"\"\"\n        n = len(ratings)\n        candies = [1]*n\n\n        # Pass from left to right\n        for i in range(1, n):\n            if ratings[i] > ratings[i-1]:\n                candies[i] = candies[i-1] + 1\n\n        # Pass from right to left\n        for i in range(n-2, -1, -1):\n            if ratings[i] > ratings[i+1]:\n                candies[i] = max(candies[i], candies[i+1] + 1)\n\n        return sum(candies)"
+    }
+  ],
+  "same-tree": [
+    {
+      "task_id": "same-tree",
+      "completion": "# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n    def isSameTree(self, p, q):\n        \"\"\"\n        :type p: TreeNode\n        :type q: TreeNode\n        :rtype: bool\n        \"\"\"\n        if not p and not q:\n            return True\n        if not p or not q:\n            return False\n        if p.val!= q.val:\n            return False\n        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)"
+    }
+  ],
+  "reorder-list": [
+    {
+      "task_id": "reorder-list",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def reorderList(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: None Do not return anything, modify head in-place instead.\n        \"\"\"\n        if not head or not head.next:\n            return\n        \n        # Find the middle of the list\n        slow = head\n        fast = head.next\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n        \n        # Reverse the second half of the list\n        prev = None\n        curr = slow.next\n        while curr:\n            next_node = curr.next\n            curr.next = prev\n            prev = curr\n            curr = next_node\n        slow.next = prev\n        \n        # Reorder the list\n        prev = None\n        while head and slow:\n            next_node = head.next\n            head.next = slow\n            prev = head\n            head = next_node\n            slow = slow.next\n            if head:\n                next_node = head.next\n                head.next = prev\n                prev = head\n                head = next_node\n        return"
+    }
+  ],
+  "word-pattern": [
+    {
+      "task_id": "word-pattern",
+      "completion": "class Solution(object):\n    def wordPattern(self, pattern, s):\n        \"\"\"\n        :type pattern: str\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        pattern_map = {}\n        s_map = {}\n        words = s.split(' ')\n        \n        if len(pattern)!= len(words):\n            return False\n\n        for i in range(len(pattern)):\n            p = pattern[i]\n            w = words[i]\n            \n            if p not in pattern_map:\n                pattern_map[p] = w\n            else:\n                if pattern_map[p]!= w:\n                    return False\n\n            if w not in s_map:\n                s_map[w] = p\n            else:\n                if s_map[w]!= p:\n                    return False\n\n        return True"
+    }
+  ],
+  "permutations": [
+    {
+      "task_id": "permutations",
+      "completion": "class Solution(object):\n    def permute(self, nums):\n        def backtrack(start = 0):\n            if start == len(nums):\n                output.append(nums[:])\n            for i in range(start, len(nums)):\n                nums[start], nums[i] = nums[i], nums[start]\n                backtrack(start + 1)\n                nums[start], nums[i] = nums[i], nums[start]\n        output = []\n        backtrack()\n        return output"
+    }
+  ],
+  "search-a-2d-matrix": [
+    {
+      "task_id": "search-a-2d-matrix",
+      "completion": "class Solution(object):\n    def searchMatrix(self, matrix, target):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :type target: int\n        :rtype: bool\n        \"\"\"\n        if not matrix:\n            return False\n\n        row, col = 0, len(matrix[0]) - 1\n\n        while row < len(matrix) and col >= 0:\n            if matrix[row][col] == target:\n                return True\n            elif matrix[row][col] < target:\n                row += 1\n            else:\n                col -= 1\n\n        return False"
+    }
+  ],
+  "add-two-numbers": [
+    {
+      "task_id": "add-two-numbers",
+      "completion": "# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n    def addTwoNumbers(self, l1, l2):\n        \"\"\"\n        :type l1: ListNode\n        :type l2: ListNode\n        :rtype: ListNode\n        \"\"\"\n        dummy = ListNode(0)\n        curr = dummy\n        carry = 0\n        \n        while l1 or l2 or carry:\n            if l1:\n                carry += l1.val\n                l1 = l1.next\n            if l2:\n                carry += l2.val\n                l2 = l2.next\n            \n            curr.next = ListNode(carry % 10)\n            curr = curr.next\n            carry //= 10\n            \n        return dummy.next"
+    }
+  ],
+  "number-complement": [
+    {
+      "task_id": "number-complement",
+      "completion": "class Solution(object):\n    def findComplement(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        binary = bin(num)[2:]  # Convert the number to binary and remove the '0b' prefix\n        complement = ''.join('1' if bit == '0' else '0' for bit in binary)  # Flip 0's and 1's\n        return int(complement, 2)  # Convert the binary string back to an integer"
+    }
+  ],
+  "arithmetic-slices-ii-subsequence": [
+    {
+      "task_id": "arithmetic-slices-ii-subsequence",
+      "completion": "class Solution(object):\n    def numberOfArithmeticSlices(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        if len(nums) < 3:\n            return 0\n        \n        dp = [0]*len(nums)\n        count = 0\n        \n        for i in range(2, len(nums)):\n            if nums[i]-nums[i-1] == nums[i-1]-nums[i-2]:\n                dp[i] = dp[i-1]+1\n                count += dp[i]\n            else:\n                dp[i] = 0\n                \n        return count"
+    }
+  ],
+  "text-justification": [
+    {
+      "task_id": "text-justification",
+      "completion": "class Solution(object):\n    def fullJustify(self, words, maxWidth):\n        \"\"\"\n        :type words: List[str]\n        :type maxWidth: int\n        :rtype: List[str]\n        \"\"\"\n        result = []\n        line = []\n        length = 0\n        for word in words:\n            if length + len(word) > maxWidth:\n                result.append(' '.join(line).ljust(maxWidth))\n                line = []\n                length = 0\n            line.append(word)\n            length += len(word)\n        result.append(' '.join(line).ljust(maxWidth))\n        return result"
+    }
+  ],
+  "binary-tree-postorder-traversal": [
+    {
+      "task_id": "binary-tree-postorder-traversal",
+      "completion": "class Solution(object):\n    def postorderTraversal(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        if not root:\n            return []\n        else:\n            return self.postorderTraversal(root.left) + self.postorderTraversal(root.right) + [root.val]"
+    }
+  ],
+  "container-with-most-water": [
+    {
+      "task_id": "container-with-most-water",
+      "completion": "class Solution(object):\n    def maxArea(self, height):\n        \"\"\"\n        :type height: List[int]\n        :rtype: int\n        \"\"\"\n        left = 0\n        right = len(height) - 1\n        max_area = 0\n        \n        while left < right:\n            # Calculate the area with the current pair of lines\n            area = (right - left) * min(height[left], height[right])\n            max_area = max(max_area, area)\n            \n            # Move the pointers inward\n            if height[left] < height[right]:\n                left += 1\n            else:\n                right -= 1\n                \n        return max_area"
+    }
+  ],
+  "concatenated-words": [
+    {
+      "task_id": "concatenated-words",
+      "completion": "class Solution(object):\n    def findAllConcatenatedWordsInADict(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: List[str]\n        \"\"\"\n        trie = {}\n        res = set()\n        \n        for word in words:\n            node = trie\n            for letter in word:\n                if letter not in node:\n                    node[letter] = {}\n                node = node[letter]\n            if len(node) > 0:\n                res.add(word)\n        \n        return list(res)"
+    }
+  ],
+  "base-7": [
+    {
+      "task_id": "base-7",
+      "completion": "class Solution(object):\n    def convertToBase7(self, num):\n        if num == 0:\n            return \"0\"\n        negative = False\n        if num < 0:\n            negative = True\n            num = -num\n        result = \"\"\n        while num > 0:\n            result = str(num % 7) + result\n            num = num // 7\n        if negative:\n            return \"-\" + result\n        return result"
+    }
+  ],
+  "nim-game": [
+    {
+      "task_id": "nim-game",
+      "completion": "class Solution(object):\n    def canWinNim(self, n):\n        return n % 4!= 0"
+    }
+  ],
+  "n-queens-ii": [
+    {
+      "task_id": "n-queens-ii",
+      "completion": "class Solution(object):\n    def totalNQueens(self, n):\n        def DFS(queens, xy_diff, xy_sum):\n            p = len(queens)\n            if p == n:\n                result.append(queens)\n                return None\n            for q in range(n):\n                if q not in queens and p - q not in xy_diff and p + q not in xy_sum: \n                    DFS(queens + [q], xy_diff + [p - q], xy_sum + [p + q])  \n\n        result = []\n        DFS([], [], [])\n        return len(result)"
+    }
+  ],
+  "n-queens": [
+    {
+      "task_id": "n-queens",
+      "completion": "class Solution(object):\n    def solveNQueens(self, n):\n        def DFS(queens, xy_diff, xy_sum):\n            p = len(queens)\n            if p == n:\n                result.append(queens)\n                return None\n            for q in range(n):\n                if q not in queens and p - q not in xy_diff and p + q not in xy_sum: \n                    DFS(queens + [q], xy_diff + [p - q], xy_sum + [p + q])  \n\n        result = []\n        DFS([], [], [])\n        return [[\".\"*i + \"Q\" + \".\"*(n-i-1) for i in row] for row in result]"
+    }
+  ],
+  "word-search": [
+    {
+      "task_id": "word-search",
+      "completion": "class Solution(object):\n    def exist(self, board, word):\n        def dfs(ind, i, j):\n            if not 0 <= i < m or not 0 <= j < n or board[i][j]!= word[ind]:\n                return False\n            if ind == len(word) - 1:\n                return True\n            tmp, board[i][j] = board[i][j], '/'\n            res = any(dfs(ind + 1, i + x, j + y) for x, y in [(0, 1), (0, -1), (1, 0), (-1, 0)] if 0 <= i + x < m and 0 <= j + y < n)\n            board[i][j] = tmp\n            return res\n\n        m, n = len(board), len(board[0])\n        return any(dfs(0, i, j) for i in range(m) for j in range(n))"
+    }
+  ],
+  "merge-sorted-array": [
+    {
+      "task_id": "merge-sorted-array",
+      "completion": "class Solution(object):\n    def merge(self, nums1, m, nums2, n):\n        nums1[m:] = nums2\n        nums1.sort()"
+    }
+  ],
+  "third-maximum-number": [
+    {
+      "task_id": "third-maximum-number",
+      "completion": "import heapq\n\nclass Solution(object):\n    def thirdMax(self, nums):\n        nums = list(set(nums))\n        if len(nums) < 3:\n            return max(nums)\n        first, second = heapq.nlargest(2, nums)\n        return max(x for x in nums if x < first and x < second)"
+    }
+  ]
+}
